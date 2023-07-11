@@ -1,5 +1,7 @@
 <?php
 
+namespace Phalcon\Models;
+
 class Projet extends \Phalcon\Mvc\Model
 {
 
@@ -312,12 +314,12 @@ class Projet extends \Phalcon\Mvc\Model
     {
         $this->setSchema("webappseller");
         $this->setSource("projet");
-        $this->belongsTo('id_application', '\Application', 'id', ['alias' => 'Application']);
-        $this->belongsTo('id_chefdeprojet', '\Chefdeprojet', 'id', ['alias' => 'Chefdeprojet']);
-        $this->belongsTo('id_client', '\Client', 'id', ['alias' => 'Client']);
-        $this->belongsTo('id_composant', '\Composant', 'id', ['alias' => 'Composant']);
-        $this->belongsTo('id_developpeur', '\Developpeur', 'id', ['alias' => 'Developpeur']);
-        $this->belongsTo('id_module', '\Module', 'id', ['alias' => 'Module']);
+        $this->belongsTo('id_application', 'Phalcon\Models\Application', 'id', ['alias' => 'Application']);
+        $this->belongsTo('id_chefdeprojet', 'Phalcon\Models\Chefdeprojet', 'id', ['alias' => 'Chefdeprojet']);
+        $this->belongsTo('id_client', 'Phalcon\Models\Client', 'id', ['alias' => 'Client']);
+        $this->belongsTo('id_composant', 'Phalcon\Models\Composant', 'id', ['alias' => 'Composant']);
+        $this->belongsTo('id_developpeur', 'Phalcon\Models\Developpeur', 'id', ['alias' => 'Developpeur']);
+        $this->belongsTo('id_module', 'Phalcon\Models\Module', 'id', ['alias' => 'Module']);
     }
 
     /**

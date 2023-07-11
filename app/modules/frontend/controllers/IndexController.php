@@ -3,14 +3,19 @@ declare(strict_types=1);
 
 namespace Phalcon\modules\frontend\controllers;
 
+
+
+use Phalcon\Models\Collaborateur;
 use Phalcon\Mvc\Controller;
 
 class IndexController extends Controller
 {
     public function indexAction()
     {
-        $param = "test";
+        $myApp = Collaborateur::findFirst(1);
 
-        $this->view->param = $param;
+        $test = $myApp->getPrenomNom();
+
+        $this->view->test = $test;
     }
 }

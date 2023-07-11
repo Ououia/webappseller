@@ -1,5 +1,7 @@
 <?php
 
+namespace Phalcon\Models;
+
 class Composant extends \Phalcon\Mvc\Model
 {
 
@@ -192,8 +194,8 @@ class Composant extends \Phalcon\Mvc\Model
     {
         $this->setSchema("webappseller");
         $this->setSource("composant");
-        $this->hasMany('id', 'Projet', 'id_composant', ['alias' => 'Projet']);
-        $this->belongsTo('module_id', '\Module', 'id', ['alias' => 'Module']);
+        $this->hasMany('id', 'Phalcon\Models\Projet', 'id_composant', ['alias' => 'Projet']);
+        $this->belongsTo('module_id', 'Phalcon\Models\Module', 'id', ['alias' => 'Module']);
     }
 
     /**

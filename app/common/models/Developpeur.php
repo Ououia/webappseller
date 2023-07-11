@@ -1,5 +1,7 @@
 <?php
 
+namespace Phalcon\Models;
+
 class Developpeur extends \Phalcon\Mvc\Model
 {
 
@@ -132,9 +134,9 @@ class Developpeur extends \Phalcon\Mvc\Model
     {
         $this->setSchema("webappseller");
         $this->setSource("developpeur");
-        $this->hasMany('id', 'CompositionEquipe', 'id_dev', ['alias' => 'CompositionEquipe']);
-        $this->hasMany('id', 'Projet', 'id_developpeur', ['alias' => 'Projet']);
-        $this->belongsTo('collaborateur_id', '\Collaborateur', 'id', ['alias' => 'Collaborateur']);
+        $this->hasMany('id', 'Phalcon\Models\CompositionEquipe', 'id_dev', ['alias' => 'CompositionEquipe']);
+        $this->hasMany('id', 'Phalcon\Models\Projet', 'id_developpeur', ['alias' => 'Projet']);
+        $this->belongsTo('collaborateur_id', 'Phalcon\Models\Collaborateur', 'id', ['alias' => 'Collaborateur']);
     }
 
     /**

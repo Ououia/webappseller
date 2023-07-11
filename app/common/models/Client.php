@@ -1,5 +1,7 @@
 <?php
 
+namespace Phalcon\Models;
+
 class Client extends \Phalcon\Mvc\Model
 {
 
@@ -132,7 +134,7 @@ class Client extends \Phalcon\Mvc\Model
     {
         $this->setSchema("webappseller");
         $this->setSource("client");
-        $this->hasMany('id', 'Projet', 'id_client', ['alias' => 'Projet']);
+        $this->hasMany('id', 'Phalcon\Models\Projet', 'id_client', ['alias' => 'Projet']);
     }
 
     /**

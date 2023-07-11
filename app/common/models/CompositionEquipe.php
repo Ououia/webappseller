@@ -1,5 +1,7 @@
 <?php
 
+namespace Phalcon\Models;
+
 class CompositionEquipe extends \Phalcon\Mvc\Model
 {
 
@@ -102,8 +104,8 @@ class CompositionEquipe extends \Phalcon\Mvc\Model
     {
         $this->setSchema("webappseller");
         $this->setSource("composition_equipe");
-        $this->belongsTo('id_dev', '\Developpeur', 'id', ['alias' => 'Developpeur']);
-        $this->belongsTo('id_team', '\Team', 'id', ['alias' => 'Team']);
+        $this->belongsTo('id_dev', 'Phalcon\Models\Developpeur', 'id', ['alias' => 'Developpeur']);
+        $this->belongsTo('id_team', 'Phalcon\Models\Team', 'id', ['alias' => 'Team']);
     }
 
     /**
