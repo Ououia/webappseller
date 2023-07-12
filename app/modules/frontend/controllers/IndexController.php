@@ -12,10 +12,15 @@ class IndexController extends Controller
 {
     public function indexAction()
     {
-        $myApp = Collaborateur::findFirst(1);
+        $myColab = Collaborateur::find( [
+            "prenom_nom = 'Jane Doe'",
+            "order" => "prime_embauche DESC"
+        ]);
 
-        $test = $myApp->getPrenomNom();
 
-        $this->view->test = $test;
+        $this->view->myColab = $myColab;
+
+
     }
+
 }

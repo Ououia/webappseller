@@ -1,11 +1,24 @@
-<div class="page-header">
-    <h1>Congratulations</h1>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{ partial('head') }}
+</head>
+<body>
+<div class="container">
+    <h1>Welcome to Phalcon!</h1>
+    <p>This is your main content section.</p>
+    <?php
+    /** @var \Phalcon\Models\Collaborateur $t */
+    foreach ($this->view->getVar("myColab") as $t) { ?>
+        <p>name : <?= $t->getPrenomNom() ?> </p>
+        <p>prime : <?= $t->getPrimeEmbauche() ?></p>
+    <?php } ?>
+k</div>
+{{ partial('footer') }}
+</body>
+</html>
 
-<p>You're now flying with Phalcon. Great things are about to happen!</p>
 
-<p>This page is located at <code>views/index/index.phtml</code></p>
 
-<p>Given param =<?php echo $this->view->getVar('test') ?></p>
 
 
