@@ -2,7 +2,14 @@
 
 namespace Phalcon\Models;
 
-class Composant extends \Phalcon\Mvc\Model
+use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\ResultInterface;
+use Phalcon\Mvc\Model\ResultsetInterface;
+use Phalcon\Mvc\ModelInterface;
+use Phalcon\Validation;
+use Phalcon\Validation\Validator\InclusionIn;
+
+class Composant extends Model
 {
 
     /**
@@ -48,6 +55,10 @@ class Composant extends \Phalcon\Mvc\Model
      * @Column(column="module_id", type="integer", nullable=true)
      */
     protected $module_id;
+
+    const _COMPETENCE_1_FRONTEND_ = 1;
+    const _COMPETENCE_2_BACKEND_ = 2;
+    const _COMPETENCE_3_DATABASE_ = 3;
 
     /**
      * Method to set the value of field id
@@ -154,7 +165,17 @@ class Composant extends \Phalcon\Mvc\Model
      */
     public function getCompetence()
     {
-        return $this->competence;
+        return intval($this->competence);
+    }
+
+    public function getCompetenceLibele() : string
+    {
+        switch ($this->getCompetence()) {
+            case  self::_COMPETENCE_1_FRONTEND_:return "Frontend";
+            case  self::_COMPETENCE_2_BACKEND_ :return "Backend";
+            case  self::_COMPETENCE_3_DATABASE_ :return "Database";
+            default:return 'type unknown';
+        }
     }
 
     /**
@@ -202,9 +223,9 @@ class Composant extends \Phalcon\Mvc\Model
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Composant[]|Composant|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return Composant[]|Composant|ResultSetInterface
      */
-    public static function find($parameters = null): \Phalcon\Mvc\Model\ResultsetInterface
+    public static function find($parameters = null): ResultsetInterface
     {
         return parent::find($parameters);
     }
@@ -213,11 +234,34 @@ class Composant extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Composant|\Phalcon\Mvc\Model\ResultInterface|\Phalcon\Mvc\ModelInterface|null
+     * @return Composant|ResultInterface|ModelInterface|null
      */
-    public static function findFirst($parameters = null): ?\Phalcon\Mvc\ModelInterface
+    public static function findFirst($parameters = null): ?ModelInterface
     {
         return parent::findFirst($parameters);
     }
 
+
+    /**
+     * @return bool
+     */
+    public function validation(): bool
+    {
+        $validator = new Validation();
+        $validator->add(
+            "competence",
+                new InclusionIn(
+                    [
+                    "template" => "test",
+                    "message" => 'test',
+                    'domain' => [
+                        self::_COMPETENCE_1_FRONTEND_,
+                        self::_COMPETENCE_2_BACKEND_,
+                        self::_COMPETENCE_3_DATABASE_,
+                    ],
+                ]
+                )
+        );
+        return $this->validate($validator);
+    }
 }

@@ -1,0 +1,20 @@
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">libelle</th>
+        <th scope="col">test</th>
+        <th scope="col">test</th>
+        <th scope="col">test</th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($this->view->comp as $c) { ?>
+    <tr>
+         <?php echo $c['libelle']   ?>
+         <?php echo $c['competence']   ?>
+         <?php echo $c['charge']   ?>
+         <?php echo $c['modulelibelle']   ?>
+    </tr>
+    <?php }?>
+  </tbody>
+</table>

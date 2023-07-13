@@ -2,7 +2,12 @@
 
 namespace Phalcon\Models;
 
-class Developpeur extends \Phalcon\Mvc\Model
+use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\ResultInterface;
+use Phalcon\Mvc\Model\ResultsetInterface;
+use Phalcon\Mvc\ModelInterface;
+
+class Developpeur extends Model
 {
 
     /**
@@ -60,6 +65,7 @@ class Developpeur extends \Phalcon\Mvc\Model
 
         return $this;
     }
+
 
     /**
      * Method to set the value of field competence
@@ -143,9 +149,9 @@ class Developpeur extends \Phalcon\Mvc\Model
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Developpeur[]|Developpeur|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return Developpeur[]|Developpeur|ResultSetInterface
      */
-    public static function find($parameters = null): \Phalcon\Mvc\Model\ResultsetInterface
+    public static function find($parameters = null): ResultsetInterface
     {
         return parent::find($parameters);
     }
@@ -154,11 +160,22 @@ class Developpeur extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Developpeur|\Phalcon\Mvc\Model\ResultInterface|\Phalcon\Mvc\ModelInterface|null
+     * @return Developpeur|ResultInterface|ModelInterface|null
      */
-    public static function findFirst($parameters = null): ?\Phalcon\Mvc\ModelInterface
+    public static function findFirst($parameters = null): ?ModelInterface
     {
         return parent::findFirst($parameters);
     }
 
+
+    public function enumNivCompetence()
+    {
+        switch ($this->getCompetence()) {
+            case "1": return "frontend";
+
+            case '2':return "backend";
+
+            case "3":return "database";
+        }
+    }
 }

@@ -1,11 +1,5 @@
 <div class="container">
-    <?php
-    /** @var Collaborateur $t */
-
-    use Phalcon\Models\Collaborateur;
-
-    foreach ($this->view->getVar("myColab") as $t) { ?>
-        <p>name : <?= $t->getPrenomNom() ?> </p>
-        <p>primes : <?= $t->getPrimeEmbauche() ?></p>
-    <?php } ?>
+    <pre>
+    <?php  var_dump($this->view->test); ?>
+    </pre>
 </div>

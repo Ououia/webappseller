@@ -19,7 +19,6 @@ $localConfig =  [
 ];
 
 $localConfigFileName = APP_PATH.'/config/local.php';
-error_log("$localConfigFileName");
 if(file_exists($localConfigFileName)) {
     include $localConfigFileName;
 }
