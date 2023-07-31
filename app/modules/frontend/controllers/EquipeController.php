@@ -9,7 +9,7 @@ use Phalcon\Models\CompositionEquipe;
 use Phalcon\Models\Team;
 use Phalcon\Mvc\Controller;
 
-class ContentController extends Controller
+class EquipeController extends Controller
 {
     public function indexAction()
     {
