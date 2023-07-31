@@ -2,7 +2,12 @@
 
 namespace Phalcon\Models;
 
-class Team extends \Phalcon\Mvc\Model
+use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\ResultInterface;
+use Phalcon\Mvc\Model\ResultsetInterface;
+use Phalcon\Mvc\ModelInterface;
+
+class Team extends Model
 {
 
     /**
@@ -112,9 +117,9 @@ class Team extends \Phalcon\Mvc\Model
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Team[]|Team|\Phalcon\Mvc\Model\ResultSetInterface
+     * @return Team[]|Team|ResultSetInterface
      */
-    public static function find($parameters = null): \Phalcon\Mvc\Model\ResultsetInterface
+    public static function find($parameters = null): ResultsetInterface
     {
         return parent::find($parameters);
     }
@@ -123,9 +128,9 @@ class Team extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Team|\Phalcon\Mvc\Model\ResultInterface|\Phalcon\Mvc\ModelInterface|null
+     * @return Team|ResultInterface|ModelInterface|null
      */
-    public static function findFirst($parameters = null): ?\Phalcon\Mvc\ModelInterface
+    public static function findFirst($parameters = null): ?ModelInterface
     {
         return parent::findFirst($parameters);
     }
