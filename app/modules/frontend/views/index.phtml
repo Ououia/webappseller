@@ -12,11 +12,11 @@
 </head>
 <body>
 <?php echo $this->view->getPartial("partials/header") ?>
-
+<button class="btn bg-white pb-5 pt-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
+    <i class="fa-solid fa-bars fa-2xl"></i>
+</button>
 <div class="container" style="margin-bottom:20em;">
-    <button class="btn bg-white py-5" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button">
-        <i class="fa-solid fa-bars"></i>
-    </button>
+
     <?php echo $this->getContent(); ?>
 </div>
 </body>

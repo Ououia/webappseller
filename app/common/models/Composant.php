@@ -168,6 +168,11 @@ class Composant extends Model
         return intval($this->competence);
     }
 
+
+    /**
+     * Returns a string representing the competence area (Frontend, Backend, Database) based on the object's competence value.
+     * If the competence is not recognized, it returns 'type unknown'.
+     */
     public function getCompetenceLibele() : string
     {
         switch ($this->getCompetence()) {

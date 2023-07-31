@@ -40,6 +40,7 @@ class Developpeur extends Model
      */
     protected $indice_production;
 
+
     /**
      * Method to set the value of field id
      *
@@ -175,7 +176,9 @@ class Developpeur extends Model
 
             case '2':return "backend";
 
-            case "3":return "database";
+            case "3":return "base de données";
         }
     }
+
+
 }

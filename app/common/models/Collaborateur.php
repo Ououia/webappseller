@@ -35,6 +35,11 @@ class Collaborateur extends \Phalcon\Mvc\Model
      */
     protected $prime_embauche;
 
+    const _COMPETENCE_1_STAGIAIRE_ = 1;
+    const _COMPETENCE_2_JUNIOR_ = 2;
+    const _COMPETENCE_3_SENIOR_ = 3;
+
+
     /**
      * Method to set the value of field id
      *
@@ -127,6 +132,17 @@ class Collaborateur extends \Phalcon\Mvc\Model
         return $this->prime_embauche;
     }
 
+
+    public function getCompetenceLibele() : string
+    {
+        switch ($this->getNiveauCompetence()) {
+            case  self::_COMPETENCE_1_STAGIAIRE_:return "Stagiaire";
+            case  self::_COMPETENCE_2_JUNIOR_ :return "Junior";
+            case  self::_COMPETENCE_3_SENIOR_ :return "Senior";
+            default:return 'type unknown';
+        }
+    }
+
     /**
      * Initialize method for model.
      */
@@ -159,5 +175,7 @@ class Collaborateur extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
+
+
 
 }

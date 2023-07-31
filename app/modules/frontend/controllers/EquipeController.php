@@ -24,19 +24,22 @@ class EquipeController extends Controller
             $table .= '<table class="table">';
             $table .= '<thead>';
             $table .= '<tr>';
-            $table .= '<th>Poste</th>';
+            $table .= '<th>Role</th>';
+            $table .= '<th>Nom</th>';
             $table .= '<th>Niveau Competence</th>';
             $table .= '</tr>';
             $table .= '</thead>';
             $table .= '<tbody>';
             $table .= '<tr>';
+            $table .= '<td>Chef de projet <i class="fa-solid fa-crown" style="color: #d3d600;"></i></td>';
             $table .= '<td>' . $equipe->Chefdeprojet->Collaborateur->getPrenomNom() .'</td>';
-            $table .= '<td>' . $equipe->Chefdeprojet->Collaborateur->getNiveauCompetence() .'</td>';
+            $table .= '<td>' . $equipe->Chefdeprojet->Collaborateur->getCompetenceLibele() .'</td>';
             $table .= '</tr>';
             foreach ($dev as $d){
                 $table .= '<tr>';
+                $table .= '<td> Developpeur ' . $d->Developpeur->enumNivCompetence() .'</td>';
                 $table .= '<td>' . $d->Developpeur->Collaborateur->getPrenomNom() .'</td>';
-                $table .= '<td>' . $d->Developpeur->Collaborateur->getNiveauCompetence() .'</td>';
+                $table .= '<td>' . $d->Developpeur->Collaborateur->getCompetenceLibele() .'</td>';
                 $table .= '</tr>';
             }
             $table .= '</tbody>';
