@@ -19,57 +19,60 @@ class DashboardController extends Controller
         $chefDeProjets = Chefdeprojet::find();
         $devs = Developpeur::find();
 
-        $selectChefDeProjets = "";
+        $htmlContent = "";
 
-        $selectChefDeProjets .= '<form action="/phalcon/dashboard/createTeam" method="post">';
-        $selectChefDeProjets .= '<label class="mb-2 fs-3" for="teamname">Nom de l\'equipe :</label>';
-        $selectChefDeProjets .= '<br>';
-        $selectChefDeProjets .= '<input class="mb-2" type="text" id="teamname" name="teamname" required minlength="4" maxlength="24" size="10">';
-        $selectChefDeProjets .= '<br>';
-        $selectChefDeProjets .= '<label class="mb-2 fs-3" for="selectOption">Choisir un chef de projet :</label>';
-        $selectChefDeProjets .= '<br>';
-        $selectChefDeProjets .= '<select class="mb-2"  name="chefdeprojet" id="chefdeprojet-select">';
+        $htmlContent .= '<form action="/phalcon/dashboard/createTeam" method="post">';
+        $htmlContent .= '<label class="mb-2 fs-3" for="teamname">Nom de l\'équipe :</label>';
+        $htmlContent .= '<br>';
+        $htmlContent .= '<input class="mb-2" type="text" id="teamname" name="teamname" required minlength="4" maxlength="24" size="10">';
+        $htmlContent .= '<br>';
+        $htmlContent .= '<label class="mb-2 fs-3" for="selectOption">Choisir un chef de projet :</label>';
+        $htmlContent .= '<br>';
+        $htmlContent .= '<select class="mb-2 w-25"  name="chefdeprojet" id="chefdeprojet-select">';
         foreach ($chefDeProjets as $chefDeProjet)
         {
-            $selectChefDeProjets .= '<option   value=' . '"' . $chefDeProjet->getId() . '">' . $chefDeProjet->Collaborateur->getPrenomNom(). '</option>';
+            $htmlContent .= '<option   value=' . '"' . $chefDeProjet->getId() . '">' . $chefDeProjet->Collaborateur->getPrenomNom(). '</option>';
         }
-        $selectChefDeProjets .= '</select>';
-        $selectChefDeProjets .= '<br>';
-        $selectChefDeProjets .= '<label class="mb-2 fs-3" for="selectOption">Choisir les developpeurs de votre equipes :</label>';
-        $selectChefDeProjets .= '<br>';
+        $htmlContent .= '</select>';
+        $htmlContent .= '<br>';
+        $htmlContent .= '<label class="mb-2 fs-3" for="selectOption">Choisir les developpeurs de votre equipes :</label>';
+        $htmlContent .= '<br>';
         foreach ($devs as $dev){
-            $selectChefDeProjets .= '<label>';
-            $selectChefDeProjets .= '<input type="checkbox" name="dev[]" value=' . '"' . $dev->getId() . '"' . 'onclick="limitCheckboxes(3)">';
-            $selectChefDeProjets .= ' ';
-            $selectChefDeProjets .= $dev->Collaborateur->getPrenomNom() . " (" . $dev->enumNivCompetence() . ")";
-            $selectChefDeProjets .= '</label>';
-            $selectChefDeProjets .= '<br>';
+            $htmlContent .= '<label>';
+            $htmlContent .= '<input type="checkbox" name="dev[]" value=' . '"' . $dev->getId() . '"' . 'onclick="limitCheckboxes(3)">';
+            $htmlContent .= ' ';
+            $htmlContent .= $dev->Collaborateur->getPrenomNom() . " (" . $dev->enumNivCompetence() . ")";
+            $htmlContent .= '</label>';
+            $htmlContent .= '<br>';
         }
-        $selectChefDeProjets .= '<input class="mt-2" type="submit" value="Submit">';
-        $selectChefDeProjets .= '</form>';
+        $htmlContent .= '<input class="mt-2" type="submit" value="Submit">';
+        $htmlContent .= '</form>';
 
-        $this->view->chefdeprojet = $selectChefDeProjets;
+        $this->view->chefdeprojet = $htmlContent;
     }
 
     public  function  createTeamAction()
     {
-
         if($this->request->isPost()){
-            $equipe = new Team();
-            $equipe->setName($this->request->getPost("teamname"))->setChefdeprojetId($this->request->getPost("chefdeprojet"))->save();
+            $equipe = (new Team())
+                ->setName($this->request->getPost("teamname"))
+                ->setChefdeprojetId($this->request->getPost("chefdeprojet"));
 
             if($equipe->save())
             {
                 foreach ($this->request->getPost("dev") as $dev)
                 {
-                    (new CompositionEquipe())->setIdTeam($equipe->getId())->setIdDev($dev)->save();
+                    (new CompositionEquipe())
+                        ->setIdTeam($equipe->getId())
+                        ->setIdDev($dev)
+                        ->save();
                 }
             }
-
             return $this->response->redirect("/phalcon/equipe");
         }
 
-
+        // Handle the case where this function was called but $this->request->isPost() is not true
+        return 'The request method is not POST';
     }
 
 }
