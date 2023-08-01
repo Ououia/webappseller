@@ -1,0 +1,30 @@
+<div>
+    <h1>Créer une equipe :</h1>
+
+    <?= $this->view->chefdeprojet ?>
+
+</div>
+<script>
+    function limitCheckboxes(maxChecked) {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        let checkedCount = 0;
+
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                checkedCount++;
+            }
+        });
+
+        if (checkedCount >= maxChecked) {
+            checkboxes.forEach(checkbox => {
+                if (!checkbox.checked) {
+                    checkbox.disabled = true;
+                }
+            });
+        } else {
+            checkboxes.forEach(checkbox => {
+                checkbox.disabled = false;
+            });
+        }
+    }
+</script>
