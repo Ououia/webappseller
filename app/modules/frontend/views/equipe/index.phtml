@@ -1,3 +1,41 @@
 <div class="container">
-   <?php echo $table; ?>
+    <?php if(!empty($table)) { ?>
+    <?php echo $table; ?>
+    <?php } else { ?>
+    <h1 class="text-center">Il n'y a aucune équipe</h1>
+    <?php } ?>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header flex-column">
+                        <i class="fa-solid fa-trash  fa-4x mb-2" style="color: #ff0000;"></i>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Are you sure?</h1>
+                </div>
+                <div class="modal-body">
+                    Do you really want to delete these records? This process cannot be undone.
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="#"  id="delete-button" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    let deleteButtons = document.getElementsByClassName("btn-for-delete");
+    let deleteConfirmation = document.getElementById("delete-button");
+
+
+    /** Ajoute la valeur de l'id de l'equipe à supprimer au chemin du boutton(liens) delete */
+    Array.from(deleteButtons).forEach((deleteButton) => {
+        deleteButton.addEventListener("click", function(){
+            let myTeamId = deleteButton.dataset.team;
+            deleteConfirmation.href =  "/phalcon/equipe/delete?teamid=" + myTeamId;
+        });
+    });
+
+</script>
