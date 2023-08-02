@@ -170,8 +170,8 @@ class Composant extends Model
 
 
     /**
-     * Returns a string representing the competence area (Frontend, Backend, Database) based on the object's competence value.
-     * If the competence is not recognized, it returns 'type unknown'.
+     * Renvoie une chaîne représentant le domaine de compétence (Frontend, Backend, Base de données) basé sur la valeur de compétence de l'objet.
+     * Si la compétence n'est pas reconnue, elle renvoie 'type inconnu'.
      */
     public function getCompetenceLibele() : string
     {

@@ -169,14 +169,16 @@ class Developpeur extends Model
     }
 
 
-    public function enumNivCompetence()
+    public function enumNivCompetence(): string
     {
         switch ($this->getCompetence()) {
             case "1": return "frontend";
 
             case '2':return "backend";
 
-            case "3":return "base de données";
+            case "3":return "base de donnees";
+
+            default:return 'type unknown';
         }
     }
 

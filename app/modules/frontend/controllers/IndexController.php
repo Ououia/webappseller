@@ -12,15 +12,12 @@ class IndexController extends Controller
 {
     public function indexAction()
     {
-        $myColab = Collaborateur::find( [
-            "prenom_nom = 'Jane Doe'",
-            "order" => "prime_embauche DESC"
-        ]);
 
+    }
 
-        $this->view->myColab = $myColab;
-
-
+    public function startGame()
+    {
+        shell_exec(" php run main add");
     }
 
 }

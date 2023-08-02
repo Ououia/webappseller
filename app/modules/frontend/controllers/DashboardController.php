@@ -51,6 +51,10 @@ class DashboardController extends Controller
         $this->view->chefdeprojet = $htmlContent;
     }
 
+
+    /**  Methode permettant la création d'une equipe , Une equipe est crée avec un nom et un chef de projet ,
+     * une fois que l'equipe est crée on crée la composition de l'equipe a partir de l'id de l'equipe et les developpeurs qui la compose
+     */
     public  function  createTeamAction()
     {
         if($this->request->isPost()){
@@ -71,7 +75,6 @@ class DashboardController extends Controller
             return $this->response->redirect("/phalcon/equipe");
         }
 
-        // Handle the case where this function was called but $this->request->isPost() is not true
         return 'The request method is not POST';
     }
 
