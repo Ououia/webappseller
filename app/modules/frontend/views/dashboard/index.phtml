@@ -4,7 +4,12 @@
     <?= $this->view->chefdeprojet ?>
 
 </div>
+
+
 <script>
+
+    //Disable les checkbox apres avoir selectionner 3 developpeurs
+
     function limitCheckboxes(maxChecked) {
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
         let checkedCount = 0;

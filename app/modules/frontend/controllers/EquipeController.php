@@ -11,6 +11,7 @@ use \Phalcon\Modules\Frontend\Controllers\ControllerBase;
 
 class EquipeController extends ControllerBase
 {
+    /** tableau des equipes */
     public function indexAction()
     {
         $equipes = Team::find();
@@ -51,7 +52,7 @@ class EquipeController extends ControllerBase
     }
 
 
-
+    /** Permet de supprimer une equipe par rapport a son id */
     public function deleteAction(): \Phalcon\Http\ResponseInterface
     {
         $team = Team::findFirst($this->request->get("teamid"));

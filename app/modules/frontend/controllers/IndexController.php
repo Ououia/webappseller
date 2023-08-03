@@ -31,8 +31,6 @@ class IndexController extends ControllerBase
 
     public function startGameAction(): \Phalcon\Http\ResponseInterface
     {
-        // Create a new user object
-
         $names = array(
             'John Smith',
             'Jane Doe',
@@ -66,6 +64,8 @@ class IndexController extends ControllerBase
             'Yoda',
             'Zorro'
         );
+
+        /** créer les collaborateurs par rapport a liste de nom données */
 
         $prime = 0;
 
@@ -101,7 +101,8 @@ class IndexController extends ControllerBase
 
         }
 
-        //
+        /** Attribut un metier a chaque collaborateur , 70% des collaborateurs sont de dev le reste des chefs de projet */
+
         $totalDev = intval(Collaborateur::count() * 0.7);  // 60% of people
         $count = 0;
         foreach (Collaborateur::find(['order' => 'RAND()']) as $collab)

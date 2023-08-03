@@ -26,8 +26,6 @@ class ComposantController extends Controller
         }
 
         $this->view->comp = $comp;
-
-
     }
 
 }

@@ -14,6 +14,7 @@ use \Phalcon\Modules\Frontend\Controllers\ControllerBase;
 
 class DashboardController extends ControllerBase
 {
+    /** Formulaire de création d'equipe */
     public function indexAction()
     {
         $chefDeProjets = Chefdeprojet::find();
