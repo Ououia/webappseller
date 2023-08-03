@@ -7,9 +7,9 @@ namespace Phalcon\modules\frontend\controllers;
 use Phalcon\Models\Collaborateur;
 use Phalcon\Models\CompositionEquipe;
 use Phalcon\Models\Team;
-use Phalcon\Mvc\Controller;
+use \Phalcon\Modules\Frontend\Controllers\ControllerBase;
 
-class EquipeController extends Controller
+class EquipeController extends ControllerBase
 {
     public function indexAction()
     {
@@ -50,7 +50,9 @@ class EquipeController extends Controller
 
     }
 
-    public function deleteAction()
+
+
+    public function deleteAction(): \Phalcon\Http\ResponseInterface
     {
         $team = Team::findFirst($this->request->get("teamid"));
 

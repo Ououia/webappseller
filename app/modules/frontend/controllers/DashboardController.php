@@ -10,9 +10,9 @@ use Phalcon\Models\Composant;
 use Phalcon\Models\CompositionEquipe;
 use Phalcon\Models\Developpeur;
 use Phalcon\Models\Team;
-use Phalcon\Mvc\Controller;
+use \Phalcon\Modules\Frontend\Controllers\ControllerBase;
 
-class DashboardController extends Controller
+class DashboardController extends ControllerBase
 {
     public function indexAction()
     {
