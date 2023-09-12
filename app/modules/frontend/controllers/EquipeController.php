@@ -21,7 +21,7 @@ class EquipeController extends ControllerBase
 
             $dev = $equipe->getRelated('CompositionEquipe');
 
-            $table .= '<h2>'. $equipe->getName() .'<button data-team=' . '"'. $equipe->getId() .'"'.  ' title="Supprimer cette equipe" type="button" class="btn btn-for-delete" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-trash" style="color: #ff0000;"></i></button>' . '</h2>';
+            $table .= '<h2>'. $equipe->getName() .'<button data-delete-team=' . '"'. $equipe->getId() .'"'.  ' title="Supprimer cette equipe" type="button" class="btn btn-for-delete" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-trash" style="color: #ff0000;"></i></button>' . '</h2>';
             $table .= '<table class="table">';
             $table .= '<thead>';
             $table .= '<tr>';
@@ -41,7 +41,7 @@ class EquipeController extends ControllerBase
                 $table .= '<td> Developpeur ' . $d->Developpeur->enumNivCompetence() .'</td>';
                 $table .= '<td>' . $d->Developpeur->Collaborateur->getPrenomNom() .'</td>';
                 $table .= '<td>' . $d->Developpeur->Collaborateur->getCompetenceLibele() .'</td>';
-                $table .= '<td><button type="button" class="btn btn-info text-white">Modifier</button></td>';
+                $table .= '<td><button data-modify-team=' . '"'. $d->Developpeur->Collaborateur->getId() .'"'.  ' type="button" class="btn btn-info text-white">Modifier</button></td>';
                 $table .= '</tr>';
             }
             $table .= '</tbody>';
@@ -51,6 +51,8 @@ class EquipeController extends ControllerBase
         $this->view->setVar('table', $table);
 
     }
+
+
 
 
     /** Permet de supprimer une equipe par rapport a son id */

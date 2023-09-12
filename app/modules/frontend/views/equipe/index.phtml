@@ -30,11 +30,10 @@
 
     let deleteConfirmation = document.getElementById("delete-button");
 
-
     /** Ajoute la valeur de l'id de l'equipe à supprimer au chemin du boutton(liens) delete */
     Array.from(deleteButtons).forEach((deleteButton) => {
         deleteButton.addEventListener("click", function(){
-            let myTeamId = deleteButton.dataset.team;
+            let myTeamId = deleteButton.dataset.deleteTeam;
             deleteConfirmation.href =  "/phalcon/equipe/delete?teamid=" + myTeamId;
         });
     });
