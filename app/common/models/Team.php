@@ -2,6 +2,8 @@
 
 namespace Phalcon\Models;
 
+use Phalcon\Escaper;
+use Phalcon\Flash\Direct;
 use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\ResultInterface;
 use Phalcon\Mvc\Model\ResultsetInterface;
@@ -135,4 +137,44 @@ class Team extends Model
         return parent::findFirst($parameters);
     }
 
+    public function checkAddTeam(int $cdp, array $devs)
+    {
+        $teams = Team::find([
+            'conditions' => 'chefdeprojet_id = :cdp:',
+            'bind'       => ['cdp' => $cdp]
+        ]);
+
+        foreach ($teams as $team) {
+            foreach ($team->CompositionEquipe as $compo) {
+                if (in_array($compo->getIdDev(), $devs)) {
+                    return $compo->Developpeur->Collaborateur->getPrenomNom();
+                }
+            }
+        }
+        return null;
+    }
+
+
+    public function addTeam(string $name, $cdp, array $devs)
+    {
+        $equipe = ($this)
+            ->setName($name)
+            ->setChefdeprojetId($cdp);
+
+        if (!$equipe->save()) {
+            return false;
+        }
+
+        foreach ($devs as $dev) {
+            $compositionEquipe = (new CompositionEquipe())
+                ->setIdTeam($equipe->getId())
+                ->setIdDev($dev);
+
+            if (!$compositionEquipe->save()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

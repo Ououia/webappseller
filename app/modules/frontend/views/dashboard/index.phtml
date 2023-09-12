@@ -1,7 +1,24 @@
 <div>
+    <?php if ($this->flashSession->has('success')): ?>
+        <div class="alert alert-success">
+            <?php foreach ($this->flashSession->getMessages('success') as $message): ?>
+                <?= $message ?>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($this->flashSession->has('error')): ?>
+        <div class="alert alert-danger">
+            <?php foreach ($this->flashSession->getMessages('error') as $message): ?>
+                <?= $message ?>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
     <h1>Créer une equipe :</h1>
 
     <?= $this->view->chefdeprojet ?>
+
+
 
 </div>
 

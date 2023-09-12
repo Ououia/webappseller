@@ -30,15 +30,14 @@ class DashboardController extends ControllerBase
         $htmlContent .= '<label class="mb-2 fs-3" for="selectOption">Choisir un chef de projet :</label>';
         $htmlContent .= '<br>';
         $htmlContent .= '<select class="mb-2 w-25"  name="chefdeprojet" id="chefdeprojet-select">';
-        foreach ($chefDeProjets as $chefDeProjet)
-        {
-            $htmlContent .= '<option   value=' . '"' . $chefDeProjet->getId() . '">' . $chefDeProjet->Collaborateur->getPrenomNom(). '</option>';
+        foreach ($chefDeProjets as $chefDeProjet) {
+            $htmlContent .= '<option   value=' . '"' . $chefDeProjet->getId() . '">' . $chefDeProjet->Collaborateur->getPrenomNom() . '</option>';
         }
         $htmlContent .= '</select>';
         $htmlContent .= '<br>';
         $htmlContent .= '<label class="mb-2 fs-3" for="selectOption">Choisir les developpeurs de votre equipes :</label>';
         $htmlContent .= '<br>';
-        foreach ($devs as $dev){
+        foreach ($devs as $dev) {
             $htmlContent .= '<label>';
             $htmlContent .= '<input type="checkbox" name="dev[]" value=' . '"' . $dev->getId() . '"' . 'onclick="limitCheckboxes(3)">';
             $htmlContent .= ' ';
@@ -56,27 +55,43 @@ class DashboardController extends ControllerBase
     /**  Methode permettant la création d'une equipe , Une equipe est crée avec un nom et un chef de projet ,
      * une fois que l'equipe est crée on crée la composition de l'equipe a partir de l'id de l'equipe et les developpeurs qui la compose
      */
-    public  function  createTeamAction()
+    public function createTeamAction()
     {
-        if($this->request->isPost()){
-            $equipe = (new Team())
-                ->setName($this->request->getPost("teamname"))
-                ->setChefdeprojetId($this->request->getPost("chefdeprojet"));
+        // Récupérer l'URL d'origine
+        $referer = $this->request->getHTTPReferer();
 
-            if($equipe->save())
-            {
-                foreach ($this->request->getPost("dev") as $dev)
-                {
-                    (new CompositionEquipe())
-                        ->setIdTeam($equipe->getId())
-                        ->setIdDev($dev)
-                        ->save();
+        if ($this->request->isPost()) {
+            $teamModel = new Team();
+            $conflictDev = $teamModel->checkAddTeam(
+                (int) $this->request->getPost("chefdeprojet"),
+                $this->request->getPost("dev")
+            );
+
+            // Si aucun développeur en conflit n'est trouvé, procéder à l'ajout de l'équipe
+            if ($conflictDev === null) {
+                $newTeam = $teamModel->addTeam(
+                    $this->request->getPost("teamname"),
+                    $this->request->getPost("chefdeprojet"),
+                    $this->request->getPost("dev")
+                );
+
+                if ($newTeam) {
+                    $this->flashSession->success("Équipe créée avec succès");
+                    return $this->response->redirect($referer);
+                } else {
+                    $this->flashSession->error("Il y a eu une erreur lors de la création de l'équipe.");
+                    return $this->response->redirect($referer);
                 }
+            } else {
+                $this->flashSession->error("Le développeur " . $conflictDev . " est déjà dans une équipe avec ce chef de projet.");
+                return $this->response->redirect($referer);
             }
-            return $this->response->redirect("/phalcon/equipe");
+        } else {
+            $this->flashSession->error("La requête n'est pas de type POST");
+            return $this->response->redirect($referer);
         }
-
-        return 'The request method is not POST';
     }
+
+
 
 }
