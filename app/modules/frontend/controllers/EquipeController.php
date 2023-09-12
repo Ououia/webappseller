@@ -41,7 +41,7 @@ class EquipeController extends ControllerBase
                 $table .= '<td> Developpeur ' . $d->Developpeur->enumNivCompetence() .'</td>';
                 $table .= '<td>' . $d->Developpeur->Collaborateur->getPrenomNom() .'</td>';
                 $table .= '<td>' . $d->Developpeur->Collaborateur->getCompetenceLibele() .'</td>';
-                $table .= '<td><button data-modify-team=' . '"'. $d->Developpeur->Collaborateur->getId() .'"'.  ' type="button" class="btn btn-info text-white">Modifier</button></td>';
+                $table .= '<td><button data-modify-team=' . '"'. $d->Developpeur->Collaborateur->getId() .'"'.  ' type="button" class="modify-button btn btn-info text-white">Modifier</button></td>';
                 $table .= '</tr>';
             }
             $table .= '</tbody>';

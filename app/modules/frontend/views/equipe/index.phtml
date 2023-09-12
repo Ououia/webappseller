@@ -30,12 +30,28 @@
 
     let deleteConfirmation = document.getElementById("delete-button");
 
-    /** Ajoute la valeur de l'id de l'equipe à supprimer au chemin du boutton(liens) delete */
-    Array.from(deleteButtons).forEach((deleteButton) => {
-        deleteButton.addEventListener("click", function(){
-            let myTeamId = deleteButton.dataset.deleteTeam;
-            deleteConfirmation.href =  "/phalcon/equipe/delete?teamid=" + myTeamId;
-        });
+    let modifyButtons = document.getElementsByClassName("modify-button");
+
+    // Function to handle modify button click
+    function handleModifyClick() {
+        let myTeamId = this.dataset.modifyTeam;
+        console.log(myTeamId);
+    }
+
+    // Function to handle delete button click
+    function handleDeleteClick() {
+        let myTeamId = this.dataset.deleteTeam;
+        document.getElementById("delete-button").href = `/phalcon/equipe/delete?teamid=${myTeamId}`;
+    }
+
+    // Attach event listeners to modify buttons
+    Array.from(document.getElementsByClassName("modify-button")).forEach(button => {
+        button.addEventListener("click", handleModifyClick);
+    });
+
+    // Attach event listeners to delete buttons
+    Array.from(document.getElementsByClassName("btn-for-delete")).forEach(button => {
+        button.addEventListener("click", handleDeleteClick);
     });
 
 </script>
