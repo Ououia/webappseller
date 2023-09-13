@@ -43,7 +43,7 @@ class EquipeController extends ControllerBase
                 $table .= '<td> Developpeur ' . $d->Developpeur->enumNivCompetence() .'</td>';
                 $table .= '<td>' . $d->Developpeur->Collaborateur->getPrenomNom() .'</td>';
                 $table .= '<td>' . $d->Developpeur->Collaborateur->getCompetenceLibele() .'</td>';
-                $table .= '<td><button data-team =' . '"'. $equipe->getId() .'"'.  '   data-modify-team=' . '"'. $d->Developpeur->getId() .'"'.  '  class="button-for-modify btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#modifyModal">Modifier</button></td>';
+                $table .= '<td><button data-team =' . '"'. $equipe->getId() .'"'.  '   data-dev=' . '"'. $d->Developpeur->getId() .'"'.  '  class="button-for-modify btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#modifyModal">Modifier</button></td>';
                 $table .= '</tr>';
             }
             $table .= '</tbody>';
@@ -54,6 +54,38 @@ class EquipeController extends ControllerBase
 
     }
 
+    public function modifyDevInTeamAction(): \Phalcon\Http\ResponseInterface
+    {
+        $referer = $this->request->getHTTPReferer();
+
+        $devId = $this->request->get('devId', "int");
+        $newDevId = $this->request->get('newDevName', "int");
+        $teamId = $this->request->get('teamId', "int");
+
+        if($devId && $newDevId && $teamId){
+            $this->db->begin();  // Start a transaction
+
+            if(CompositionEquipe::find(["conditions" => "id_dev = :devId: AND id_team = :teamId:", "bind" => ["devId" => $devId, "teamId" => $teamId]])->delete())
+            {
+                $newDev =  (new CompositionEquipe())
+                    ->setIdTeam($teamId)
+                    ->setIdDev($newDevId);
+
+                if ($newDev->save()) {
+                    $this->db->commit();  // Commit the transaction
+                    $this->flashSession->success("Équipe modifier avec succès");
+                    return $this->response->redirect($referer);
+                }
+            }
+            $this->db->rollback();  // Rollback the transaction in case of failure
+            $this->flashSession->error("Il y a eu une erreur lors de la modification de l'équipe.");
+            return $this->response->redirect($referer);
+        }
+        $this->flashSession->error("Invalid parameters");
+        return $this->response->redirect($referer);
+    }
+
+    /** Permet de modifier un developpeur dans une equipe donnée */
     public function getAvailableDevsAction(): \Phalcon\Http\ResponseInterface
     {
         $response = new Response();
@@ -84,7 +116,8 @@ class EquipeController extends ControllerBase
         foreach ($developers as $dev) {
             $developerInfo[] = [
                 'id' => $dev->getId(),
-                'name' => $dev->Collaborateur->getPrenomNom()
+                'name' => $dev->Collaborateur->getPrenomNom(),
+                'competence' => $dev->enumNivCompetence()
             ];
         }
 
