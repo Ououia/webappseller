@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace Phalcon\modules\frontend\controllers;
 
 
+use Phalcon\Http\Response;
 use Phalcon\Models\Collaborateur;
 use Phalcon\Models\CompositionEquipe;
+use Phalcon\Models\Developpeur;
 use Phalcon\Models\Team;
 use \Phalcon\Modules\Frontend\Controllers\ControllerBase;
 
@@ -21,7 +23,7 @@ class EquipeController extends ControllerBase
 
             $dev = $equipe->getRelated('CompositionEquipe');
 
-            $table .= '<h2>'. $equipe->getName() .'<button data-delete-team=' . '"'. $equipe->getId() .'"'.  ' title="Supprimer cette equipe" type="button" class="btn btn-for-delete" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-trash" style="color: #ff0000;"></i></button>' . '</h2>';
+            $table .= '<h2>'. $equipe->getName() .'<button data-delete-team=' . '"'. $equipe->getId() .'"'.  ' title="Supprimer cette equipe" type="button" class="btn btn-for-delete" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="fa-solid fa-trash" style="color: #ff0000;"></i></button>' . '</h2>';
             $table .= '<table class="table">';
             $table .= '<thead>';
             $table .= '<tr>';
@@ -41,7 +43,7 @@ class EquipeController extends ControllerBase
                 $table .= '<td> Developpeur ' . $d->Developpeur->enumNivCompetence() .'</td>';
                 $table .= '<td>' . $d->Developpeur->Collaborateur->getPrenomNom() .'</td>';
                 $table .= '<td>' . $d->Developpeur->Collaborateur->getCompetenceLibele() .'</td>';
-                $table .= '<td><button data-modify-team=' . '"'. $d->Developpeur->Collaborateur->getId() .'"'.  ' type="button" class="modify-button btn btn-info text-white">Modifier</button></td>';
+                $table .= '<td><button data-team =' . '"'. $equipe->getId() .'"'.  '   data-modify-team=' . '"'. $d->Developpeur->getId() .'"'.  '  class="button-for-modify btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#modifyModal">Modifier</button></td>';
                 $table .= '</tr>';
             }
             $table .= '</tbody>';
@@ -52,7 +54,46 @@ class EquipeController extends ControllerBase
 
     }
 
+    public function getAvailableDevsAction(): \Phalcon\Http\ResponseInterface
+    {
+        $response = new Response();
 
+        /** Cherche l'equipe du developpeur selectionner  */
+        $teamId = $this->request->get('teamid', "int");
+
+        $devsInTeam = CompositionEquipe::find([
+            "conditions" => "id_team = :teamId:",
+            "bind" => ["teamId" => $teamId]
+        ]);
+
+
+        /** crée un tableau avec les id des developpeurs present dans l'equipe du developpeur qu on veut modifier */
+        $excludeDevIds = [];
+        foreach ($devsInTeam as $composition) {
+            $excludeDevIds[] = $composition->getIdDev();
+        }
+
+        /** Recupere tout les developpeurs sauf ceux present dans l'equipe du developpeur selectionner pour la modification */
+        $developers = Developpeur::find([
+            "conditions" => "id NOT IN ({devIds:array})",
+            "bind" => ["devIds" => $excludeDevIds]
+        ]);
+
+        /** Retourne un json avec l'id de et le nom de chaque developpeur qui peuvent intégré l'equipe  */
+        $developerInfo = [];
+        foreach ($developers as $dev) {
+            $developerInfo[] = [
+                'id' => $dev->getId(),
+                'name' => $dev->Collaborateur->getPrenomNom()
+            ];
+        }
+
+        $response->setJsonContent([
+            "status" => "success",
+            "developers" => $developerInfo
+        ]);
+        return $response->send();
+    }
 
 
     /** Permet de supprimer une equipe par rapport a son id */

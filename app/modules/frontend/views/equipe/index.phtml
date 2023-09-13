@@ -6,12 +6,12 @@
     <?php } ?>
 
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header flex-column">
                         <i class="fa-solid fa-trash  fa-4x mb-2" style="color: #ff0000;"></i>
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Are you sure?</h1>
+                        <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
                 </div>
                 <div class="modal-body">
                     Do you really want to delete these records? This process cannot be undone.
@@ -23,35 +23,84 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header flex-column">
+                    <h1 class="modal-title fs-5" id="modifyModalLabel">Choisissez un nouveau collaborateur</h1>
+                </div>
+                <div class="modal-body">
+                    <select class="form-select" aria-label="Default select example">
+                    </select>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="#"  id="modify-button" class="btn btn-success">Modifier</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-    let deleteButtons = document.getElementsByClassName("btn-for-delete");
 
-    let deleteConfirmation = document.getElementById("delete-button");
+    addEventListener("DOMContentLoaded", (event) => {
 
-    let modifyButtons = document.getElementsByClassName("modify-button");
+        /** Ajoute un evenement sur le boutton modifier et recupere l'id de l'equipe */
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('button-for-modify')) {
+                const teamId = event.target.getAttribute('data-team');
+                getAvailableDevs(teamId);
+            }
+        });
 
-    // Function to handle modify button click
-    function handleModifyClick() {
-        let myTeamId = this.dataset.modifyTeam;
-        console.log(myTeamId);
-    }
+        /** Recupere les developpeurs  */
+        function getAvailableDevs(teamId) {
+            fetch(`/phalcon/equipe/getAvailableDevs?teamid=${teamId}`)
+                .then(response => response.json())
+                .then(data => populateDropdown(data));
+        }
 
-    // Function to handle delete button click
-    function handleDeleteClick() {
-        let myTeamId = this.dataset.deleteTeam;
-        document.getElementById("delete-button").href = `/phalcon/equipe/delete?teamid=${myTeamId}`;
-    }
+        function populateDropdown(data) {
+            let selectElem = document.querySelector('.form-select');
+            selectElem.innerHTML = "";  // clear existing options
 
-    // Attach event listeners to modify buttons
-    Array.from(document.getElementsByClassName("modify-button")).forEach(button => {
-        button.addEventListener("click", handleModifyClick);
+            data.developers.forEach(dev => {
+                let option = document.createElement('option');
+                option.value = dev.id;
+                option.text = dev.name;
+                selectElem.appendChild(option);
+            });
+        }
+
+        // Recupere l'id de l'equipe et appel la fonction qui modifie l'équipe
+        function handleModifyClick() {
+            let myDevId = this.dataset.modifyTeam;
+            let myTeamId = this.dataset.team;
+            console.log(myTeamId);
+            document.getElementById("modify-button").href = `/phalcon/equipe/modify?devid=${myDevId}&teamid=${myTeamId}`;
+        }
+
+
+        // Recupere l'id de l'equipe et appel la fonction qui supprime l'équipe
+        function handleDeleteClick() {
+            let myTeamId = this.dataset.deleteTeam;
+            document.getElementById("delete-button").href = `/phalcon/equipe/delete?teamid=${myTeamId}`;
+        }
+
+
+        Array.from(document.getElementsByClassName("button-for-modify")).forEach(button => {
+            button.addEventListener("click", handleModifyClick);
+        });
+
+        Array.from(document.getElementsByClassName("btn-for-delete")).forEach(button => {
+            button.addEventListener("click", handleDeleteClick);
+        });
+
+
+
     });
 
-    // Attach event listeners to delete buttons
-    Array.from(document.getElementsByClassName("btn-for-delete")).forEach(button => {
-        button.addEventListener("click", handleDeleteClick);
-    });
 
 </script>
