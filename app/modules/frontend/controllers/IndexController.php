@@ -8,7 +8,9 @@ namespace Phalcon\modules\frontend\controllers;
 use Phalcon\Helper\Arr;
 use Phalcon\Models\Chefdeprojet;
 use Phalcon\Models\Collaborateur;
+use Phalcon\Models\CompositionEquipe;
 use Phalcon\Models\Developpeur;
+use Phalcon\Models\Team;
 use \Phalcon\Modules\Frontend\Controllers\ControllerBase;
 
 class IndexController extends ControllerBase
@@ -31,6 +33,13 @@ class IndexController extends ControllerBase
 
     public function startGameAction(): \Phalcon\Http\ResponseInterface
     {
+        CompositionEquipe::find()->delete();
+        Team::find()->delete();
+        Developpeur::find()->delete();
+        Chefdeprojet::find()->delete();
+        Collaborateur::find()->delete();
+
+
         $names = array(
             'John Smith',
             'Jane Doe',
