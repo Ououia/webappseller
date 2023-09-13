@@ -63,14 +63,14 @@
         }
 
         function populateDropdown(data) {
-            let selectElem = document.querySelector('.form-select');
-            selectElem.innerHTML = "";  // clear existing options
+            let selectModal = document.querySelector('.form-select');
+            selectModal.innerHTML = "";  // clear existing options
 
             data.developers.forEach(dev => {
                 let option = document.createElement('option');
                 option.value = dev.id;
                 option.text = dev.name;
-                selectElem.appendChild(option);
+                selectModal.appendChild(option);
             });
         }
 
