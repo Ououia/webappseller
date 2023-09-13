@@ -137,21 +137,23 @@ class Team extends Model
         return parent::findFirst($parameters);
     }
 
-    public function checkAddTeam(int $cdp, array $devs)
+    public function checkAddTeam(int $cdp, array $devs) : array
     {
         $teams = Team::find([
             'conditions' => 'chefdeprojet_id = :cdp:',
             'bind'       => ['cdp' => $cdp]
         ]);
 
+        $devNames = [];
+
         foreach ($teams as $team) {
             foreach ($team->CompositionEquipe as $compo) {
                 if (in_array($compo->getIdDev(), $devs)) {
-                    return $compo->Developpeur->Collaborateur->getPrenomNom();
+                    $devNames[] = $compo->Developpeur->Collaborateur->getPrenomNom();
                 }
             }
         }
-        return null;
+        return $devNames;
     }
 
 

@@ -68,7 +68,7 @@ class DashboardController extends ControllerBase
             );
 
             // Si aucun développeur en conflit n'est trouvé, procéder à l'ajout de l'équipe
-            if ($conflictDev === null) {
+            if (count($conflictDev) === 0) {
                 $newTeam = $teamModel->addTeam(
                     $this->request->getPost("teamname"),
                     $this->request->getPost("chefdeprojet"),
@@ -83,7 +83,7 @@ class DashboardController extends ControllerBase
                     return $this->response->redirect($referer);
                 }
             } else {
-                $this->flashSession->error("Le développeur " . $conflictDev . " est déjà dans une équipe avec ce chef de projet.");
+                $this->flashSession->error("Le développeur " . implode("," , $conflictDev) . " est déjà dans une équipe avec ce chef de projet.");
                 return $this->response->redirect($referer);
             }
         } else {
