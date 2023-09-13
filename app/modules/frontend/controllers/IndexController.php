@@ -33,12 +33,21 @@ class IndexController extends ControllerBase
 
     public function startGameAction(): \Phalcon\Http\ResponseInterface
     {
-        CompositionEquipe::find()->delete();
-        Team::find()->delete();
-        Developpeur::find()->delete();
-        Chefdeprojet::find()->delete();
-        Collaborateur::find()->delete();
 
+        $this->db->begin();
+
+        try {
+            CompositionEquipe::find()->delete();
+            Team::find()->delete();
+            Developpeur::find()->delete();
+            Chefdeprojet::find()->delete();
+            Collaborateur::find()->delete();
+
+            $this->db->commit();
+        } catch (\Exception $e) {
+            $this->db->rollback();
+            echo "Une erreur est survenu, veuillez reessayer";
+        }
 
         $names = array(
             'John Smith',

@@ -1,4 +1,19 @@
 <div class="container">
+    <?php if ($this->flashSession->has('success')): ?>
+        <div class="alert alert-success">
+            <?php foreach ($this->flashSession->getMessages('success') as $message): ?>
+                <?= $message ?>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($this->flashSession->has('error')): ?>
+        <div class="alert alert-danger">
+            <?php foreach ($this->flashSession->getMessages('error') as $message): ?>
+                <?= $message ?>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
     <?php if(!empty($table)) { ?>
     <?php echo $table; ?>
     <?php } else { ?>
@@ -31,12 +46,16 @@
                     <h1 class="modal-title fs-5" id="modifyModalLabel">Choisissez un nouveau collaborateur</h1>
                 </div>
                 <div class="modal-body">
-                    <select class="form-select" aria-label="Default select example">
-                    </select>
+                    <form action="/phalcon/equipe/modifyDevInTeam">
+                        <select name="newDevName" class="form-select" aria-label="Default select example">
+                        </select>
+                        <input type="hidden" id="devId" name="devId" value=""><br>
+                        <input type="hidden" id="teamId" name="teamId" value=""><br>
+                        <input type="submit" value="Submit">
+                    </form>
                 </div>
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <a href="#"  id="modify-button" class="btn btn-success">Modifier</a>
                 </div>
             </div>
         </div>
@@ -51,6 +70,8 @@
         document.addEventListener('click', function(event) {
             if (event.target.classList.contains('button-for-modify')) {
                 const teamId = event.target.getAttribute('data-team');
+                document.getElementById("teamId").value =   teamId;
+                document.getElementById("devId").value = event.target.getAttribute('data-dev');
                 getAvailableDevs(teamId);
             }
         });
@@ -69,7 +90,7 @@
             data.developers.forEach(dev => {
                 let option = document.createElement('option');
                 option.value = dev.id;
-                option.text = dev.name;
+                option.text = `${dev.name} (${dev.competence})`;
                 selectModal.appendChild(option);
             });
         }
