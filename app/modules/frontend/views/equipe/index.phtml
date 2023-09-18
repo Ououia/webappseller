@@ -70,15 +70,16 @@
         document.addEventListener('click', function(event) {
             if (event.target.classList.contains('button-for-modify')) {
                 const teamId = event.target.getAttribute('data-team');
+                const cdpId = event.target.getAttribute('data-cdp');
                 document.getElementById("teamId").value =   teamId;
                 document.getElementById("devId").value = event.target.getAttribute('data-dev');
-                getAvailableDevs(teamId);
+                getAvailableDevs(teamId, cdpId);
             }
         });
 
         /** Recupere les developpeurs  */
-        function getAvailableDevs(teamId) {
-            fetch(`/phalcon/equipe/getAvailableDevs?teamid=${teamId}`)
+        function getAvailableDevs(teamId, cdpId) {
+            fetch(`/phalcon/equipe/getAvailableDevs?teamid=${teamId}&cdpid=${cdpId}`)
                 .then(response => response.json())
                 .then(data => populateDropdown(data));
         }

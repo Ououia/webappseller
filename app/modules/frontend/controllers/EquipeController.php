@@ -43,7 +43,7 @@ class EquipeController extends ControllerBase
                 $table .= '<td> Developpeur ' . $d->Developpeur->enumNivCompetence() .'</td>';
                 $table .= '<td>' . $d->Developpeur->Collaborateur->getPrenomNom() .'</td>';
                 $table .= '<td>' . $d->Developpeur->Collaborateur->getCompetenceLibele() .'</td>';
-                $table .= '<td><button data-team =' . '"'. $equipe->getId() .'"'.  '   data-dev=' . '"'. $d->Developpeur->getId() .'"'.  '  class="button-for-modify btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#modifyModal">Modifier</button></td>';
+                $table .= '<td><button data-cdp =' . '"'. $equipe->Chefdeprojet->getId() .'"'.  'data-team =' . '"'. $equipe->getId() .'"'.  'data-dev=' . '"'. $d->Developpeur->getId() .'"'.  '  class="button-for-modify btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#modifyModal">Modifier</button></td>';
                 $table .= '</tr>';
             }
             $table .= '</tbody>';
@@ -91,18 +91,24 @@ class EquipeController extends ControllerBase
         $response = new Response();
 
         /** Cherche l'equipe du developpeur selectionner  */
-        $teamId = $this->request->get('teamid', "int");
+        $cdpId = $this->request->get("cdpid", "int");
 
-        $devsInTeam = CompositionEquipe::find([
-            "conditions" => "id_team = :teamId:",
-            "bind" => ["teamId" => $teamId]
-        ]);
 
+        /** recupere les equipes avec les memes chef de projet et ensuite les developpeurs qui sont dans ces equipes */
+        $teamIds = Team::getTeamsByChefdeprojetId($cdpId);
+
+        if (isset($teamIds['error']) && $teamIds['error'] === true) {
+            // Handle or Display the Error
+            $errorMessages = implode(", ", $teamIds['messages']);
+            $this->flashSession->error($errorMessages);
+        }
+
+        $devIds = CompositionEquipe::getDevsByTeamIds($teamIds);
 
         /** crée un tableau avec les id des developpeurs present dans l'equipe du developpeur qu on veut modifier */
         $excludeDevIds = [];
-        foreach ($devsInTeam as $composition) {
-            $excludeDevIds[] = $composition->getIdDev();
+        foreach ($devIds as $devIdToExclude) {
+            $excludeDevIds[] = $devIdToExclude;
         }
 
         /** Recupere tout les developpeurs sauf ceux present dans l'equipe du developpeur selectionner pour la modification */
@@ -120,6 +126,7 @@ class EquipeController extends ControllerBase
                 'competence' => $dev->enumNivCompetence()
             ];
         }
+
 
         $response->setJsonContent([
             "status" => "success",
