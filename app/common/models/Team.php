@@ -8,6 +8,9 @@ use Phalcon\Mvc\Model;
 use Phalcon\Mvc\Model\ResultInterface;
 use Phalcon\Mvc\Model\ResultsetInterface;
 use Phalcon\Mvc\ModelInterface;
+use Phalcon\Validation;
+use Phalcon\Validation\Validator\Digit;
+use Phalcon\Validation\Validator\PresenceOf;
 
 class Team extends Model
 {
@@ -178,5 +181,39 @@ class Team extends Model
         }
 
         return true;
+    }
+
+    public static function getTeamsByChefdeprojetId(int $cdp): array
+    {
+        $validator = new Validation();
+        $validator->add('cdp', new PresenceOf(['message' => 'The Chef de Projet ID is required']));
+        $validator->add('cdp', new Digit(['message' => 'The Chef de Projet ID must be an integer']));
+
+        $messages = $validator->validate(['cdp' => $cdp]);
+        $errorMessages = [];
+
+        // Step 1: Collect Messages
+        if (count($messages)) {
+            foreach ($messages as $message) {
+                $errorMessages[] = $message->getMessage();
+            }
+        }
+
+        // Step 2: Return or Display Messages
+        if (!empty($errorMessages)) {
+            return ['error' => true, 'messages' => $errorMessages];
+        }
+
+        $teams = Team::find([
+            'conditions' => 'chefdeprojet_id = :cdp:',
+            'bind'       => ['cdp' => $cdp]
+        ]);
+
+        $teamIds = [];
+        foreach ($teams as $team) {
+            $teamIds[] = $team->getId();
+        }
+
+        return $teamIds;
     }
 }
