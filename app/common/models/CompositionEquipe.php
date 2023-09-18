@@ -130,4 +130,19 @@ class CompositionEquipe extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
+
+    public static function getDevsByTeamIds(array $teamIds): array
+    {
+        $compositionEquipes = CompositionEquipe::find([
+            'conditions' => 'id_team IN ({teamIds:array})',
+            'bind' => ['teamIds' => $teamIds]
+        ]);
+
+        $devIds = [];
+        foreach ($compositionEquipes as $compositionEquipe) {
+            $devIds[] = $compositionEquipe->getIdDev();
+        }
+
+        return $devIds;
+    }
 }
