@@ -53,9 +53,9 @@ class EquipeController extends ControllerBase
         $this->view->setVar('table', $table);
     }
 
-    public function modifyTeamName(){
-
-    }
+//    public function modifyTeamName(){
+//
+//    }
 
     public function modifyDevInTeamAction(): \Phalcon\Http\ResponseInterface
     {
@@ -144,7 +144,6 @@ class EquipeController extends ControllerBase
     /** Permet de supprimer une equipe par rapport a son id */
     public function deleteAction(): \Phalcon\Http\ResponseInterface
     {
-        if ($)
         $team = Team::findFirst($this->request->get("teamid"));
 
         $error = false;
