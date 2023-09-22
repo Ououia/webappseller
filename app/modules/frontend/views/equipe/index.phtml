@@ -14,10 +14,11 @@
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
+
     <?php if(!empty($table)) { ?>
-    <?php echo $table; ?>
+        <?php echo $table; ?>
     <?php } else { ?>
-    <h1 class="text-center">Il n'y a aucunes équipes</h1>
+        <h1 class="text-center">Il n'y a aucunes équipes</h1>
     <?php } ?>
 
     <!-- Modal -->
@@ -46,7 +47,7 @@
                     <h1 class="modal-title fs-5" id="modifyModalLabel">Choisissez un nouveau collaborateur</h1>
                 </div>
                 <div class="modal-body">
-                    <form action="/phalcon/equipe/modifyDevInTeam">
+                    <form action="<?php echo $this->url->get(PROJECT_PATH . "/equipe/modifyDevInTeam") ?>">
                         <select name="newDevName" class="form-select" aria-label="Default select example">
                         </select>
                         <input type="hidden" id="devId" name="devId" value=""><br>
@@ -79,7 +80,7 @@
 
         /** Recupere les developpeurs  */
         function getAvailableDevs(teamId, cdpId) {
-            fetch(`/phalcon/equipe/getAvailableDevs?teamid=${teamId}&cdpid=${cdpId}`)
+            fetch(`./equipe/getAvailableDevs?teamid=${teamId}&cdpid=${cdpId}`)
                 .then(response => response.json())
                 .then(data => populateDropdown(data));
         }
@@ -101,14 +102,14 @@
             let myDevId = this.dataset.modifyTeam;
             let myTeamId = this.dataset.team;
             console.log(myTeamId);
-            document.getElementById("modify-button").href = `/phalcon/equipe/modify?devid=${myDevId}&teamid=${myTeamId}`;
+            document.getElementById("modify-button").href = `./equipe/modify?devid=${myDevId}&teamid=${myTeamId}`;
         }
 
 
         // Recupere l'id de l'equipe et appel la fonction qui supprime l'équipe
         function handleDeleteClick() {
             let myTeamId = this.dataset.deleteTeam;
-            document.getElementById("delete-button").href = `/phalcon/equipe/delete?teamid=${myTeamId}`;
+            document.getElementById("delete-button").href = `./equipe/delete?teamid=${myTeamId}`;
         }
 
 
@@ -119,10 +120,5 @@
         Array.from(document.getElementsByClassName("btn-for-delete")).forEach(button => {
             button.addEventListener("click", handleDeleteClick);
         });
-
-
-
     });
-
-
 </script>

@@ -22,7 +22,7 @@ class DashboardController extends ControllerBase
 
         $htmlContent = "";
 
-        $htmlContent .= '<form action="/phalcon/dashboard/createTeam" method="post">';
+        $htmlContent .= '<form action=' .  $this->url->get(PROJECT_PATH . "/dashboard/createTeam") .' method="post">';
         $htmlContent .= '<label class="mb-2 fs-3" for="teamname">Nom de l\'équipe :</label>';
         $htmlContent .= '<br>';
         $htmlContent .= '<input class="mb-2" type="text" id="teamname" name="teamname" required minlength="4" maxlength="24" size="10">';
@@ -91,7 +91,5 @@ class DashboardController extends ControllerBase
             return $this->response->redirect($referer);
         }
     }
-
-
 
 }

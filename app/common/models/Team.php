@@ -186,8 +186,8 @@ class Team extends Model
     public static function getTeamsByChefdeprojetId(int $cdp): array
     {
         $validator = new Validation();
-        $validator->add('cdp', new PresenceOf(['message' => 'The Chef de Projet ID is required']));
-        $validator->add('cdp', new Digit(['message' => 'The Chef de Projet ID must be an integer']));
+        $validator->add('cdp', new PresenceOf(['message' => 'ID du chef de project obligatoire']));
+        $validator->add('cdp', new Digit(['message' => 'ID du checf de projet doit etre en entier']));
 
         $messages = $validator->validate(['cdp' => $cdp]);
         $errorMessages = [];
