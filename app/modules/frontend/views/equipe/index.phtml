@@ -21,7 +21,26 @@
         <h1 class="text-center">Il n'y a aucunes équipes</h1>
     <?php } ?>
 
-    <!-- Modal -->
+    <!-- update Name Modal -->
+    <div class="modal fade" id="editNameModal" tabindex="-1" aria-labelledby="editNameModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header flex-column">
+                    <h1 class="modal-title fs-5" id="editNameModalLabel">Choisissez un nouveau nom pour l'equipe</h1>
+                </div>
+                <div class="modal-body">
+                    <form action="<?php echo $this->url->get(PROJECT_PATH . "/modifyTeamName") ?>">
+                        <input type="text" placeholder="Entrer un nom">
+                        <input type="hidden" id="teamId"  name="teamId" value=""><br>
+                        <input type="submit" value="Submit">
+                    </form>
+                    <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- delete Modal -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -40,6 +59,7 @@
         </div>
     </div>
 
+    <!-- modify Modal -->
     <div class="modal fade" id="modifyModal" tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -47,16 +67,14 @@
                     <h1 class="modal-title fs-5" id="modifyModalLabel">Choisissez un nouveau collaborateur</h1>
                 </div>
                 <div class="modal-body">
-                    <form action="<?php echo $this->url->get(PROJECT_PATH . "/equipe/modifyDevInTeam") ?>">
+                    <form method="post" action="<?php echo $this->url->get(PROJECT_PATH . "/equipe/modifyDevInTeam") ?>">
                         <select name="newDevName" class="form-select" aria-label="Default select example">
                         </select>
                         <input type="hidden" id="devId" name="devId" value=""><br>
                         <input type="hidden" id="teamId" name="teamId" value=""><br>
-                        <input type="submit" value="Submit">
+                        <input  class="btn btn-success" type="submit" value="Submit">
                     </form>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
@@ -64,7 +82,6 @@
 </div>
 
 <script>
-
     addEventListener("DOMContentLoaded", (event) => {
 
         /** Ajoute un evenement sur le boutton modifier et recupere l'id de l'equipe */
@@ -97,7 +114,7 @@
             });
         }
 
-        // Recupere l'id de l'equipe et appel la fonction qui modifie l'équipe
+        /** Recupere l'id de l'equipe et appel la fonction qui modifie l'équipe */
         function handleModifyClick() {
             let myDevId = this.dataset.modifyTeam;
             let myTeamId = this.dataset.team;
@@ -106,7 +123,7 @@
         }
 
 
-        // Recupere l'id de l'equipe et appel la fonction qui supprime l'équipe
+        /** Recupere l'id de l'equipe et appel la fonction qui supprime l'équipe */
         function handleDeleteClick() {
             let myTeamId = this.dataset.deleteTeam;
             document.getElementById("delete-button").href = `./equipe/delete?teamid=${myTeamId}`;
