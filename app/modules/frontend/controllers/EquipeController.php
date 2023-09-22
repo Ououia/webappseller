@@ -23,7 +23,7 @@ class EquipeController extends ControllerBase
 
             $dev = $equipe->getRelated('CompositionEquipe');
 
-            $table .= '<h2>'. $equipe->getName() .'<button data-delete-team=' . '"'. $equipe->getId() .'"'.  ' title="Supprimer cette equipe" type="button" class="btn btn-for-delete" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="fa-solid fa-trash" style="color: #ff0000;"></i></button>' . '</h2>';
+            $table .= '<h2>'. $equipe->getName() . '<button data-team=' . '"'. $equipe->getId() .'"'.  ' title="Modifier le nom de cette equipe" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editNameModal"><i class="fa-solid fa-pen fa-xl"></i></button>' .'<button data-delete-team=' . '"'. $equipe->getId() .'"'.  ' title="Supprimer cette equipe" type="button" class="btn btn-for-delete" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="fa-solid fa-trash fa-xl" style="color: #ff0000;"></i></button>' . '</h2>';
             $table .= '<table class="table">';
             $table .= '<thead>';
             $table .= '<tr>';
@@ -56,83 +56,85 @@ class EquipeController extends ControllerBase
 
     public function modifyDevInTeamAction(): \Phalcon\Http\ResponseInterface
     {
-        $referer = $this->request->getHTTPReferer();
+        if($this->request->isGet()){
+            $referer = $this->request->getHTTPReferer();
 
-        $devId = $this->request->get('devId', "int");
-        $newDevId = $this->request->get('newDevName', "int");
-        $teamId = $this->request->get('teamId', "int");
+            $devId = $this->request->get('devId', "int");
+            $newDevId = $this->request->get('newDevName', "int");
+            $teamId = $this->request->get('teamId', "int");
 
-        if($devId && $newDevId && $teamId){
-            $this->db->begin();  // Start a transaction
+            if($devId && $newDevId && $teamId){
+                $this->db->begin();  // Start a transaction
 
-            if(CompositionEquipe::find(["conditions" => "id_dev = :devId: AND id_team = :teamId:", "bind" => ["devId" => $devId, "teamId" => $teamId]])->delete())
-            {
-                $newDev =  (new CompositionEquipe())
-                    ->setIdTeam($teamId)
-                    ->setIdDev($newDevId);
+                if(CompositionEquipe::find(["conditions" => "id_dev = :devId: AND id_team = :teamId:", "bind" => ["devId" => $devId, "teamId" => $teamId]])->delete())
+                {
+                    $newDev =  (new CompositionEquipe())
+                        ->setIdTeam($teamId)
+                        ->setIdDev($newDevId);
 
-                if ($newDev->save()) {
-                    $this->db->commit();  // Commit the transaction
-                    $this->flashSession->success("Équipe modifier avec succès");
-                    return $this->response->redirect($referer);
+                    if ($newDev->save()) {
+                        $this->db->commit();  // Commit the transaction
+                        $this->flashSession->success("Équipe modifier avec succès");
+                        return $this->response->redirect($referer);
+                    }
                 }
+                $this->db->rollback();  // Rollback the transaction in case of failure
+                $this->flashSession->error("Il y a eu une erreur lors de la modification de l'équipe.");
+                return $this->response->redirect($referer);
             }
-            $this->db->rollback();  // Rollback the transaction in case of failure
-            $this->flashSession->error("Il y a eu une erreur lors de la modification de l'équipe.");
+            $this->flashSession->error("Invalid parameters");
             return $this->response->redirect($referer);
+        } else {
+            return  $this->flashSession->error("La requête n'est pas de type GET");
         }
-        $this->flashSession->error("Invalid parameters");
-        return $this->response->redirect($referer);
     }
 
     /** Permet de modifier un developpeur dans une equipe donnée */
     public function getAvailableDevsAction(): \Phalcon\Http\ResponseInterface
     {
-        $response = new Response();
+        if($this->request->isGet()){
+            $response = new Response();
 
-        /** Cherche l'equipe du developpeur selectionner  */
-        $cdpId = $this->request->get("cdpid", "int");
+            /** recupere les equipes avec les memes chef de projet et ensuite les developpeurs qui sont dans ces equipes */
+            $teamIds = Team::getTeamsByChefdeprojetId($this->request->get("cdpid", "int"));
 
+            if (isset($teamIds['error']) && $teamIds['error'] === true) {
+                $errorMessages = implode(", ", $teamIds['messages']);
+                $this->flashSession->error($errorMessages);
+            }
 
-        /** recupere les equipes avec les memes chef de projet et ensuite les developpeurs qui sont dans ces equipes */
-        $teamIds = Team::getTeamsByChefdeprojetId($cdpId);
+            $devIds = CompositionEquipe::getDevsByTeamIds($teamIds);
 
-        if (isset($teamIds['error']) && $teamIds['error'] === true) {
-            // Handle or Display the Error
-            $errorMessages = implode(", ", $teamIds['messages']);
-            $this->flashSession->error($errorMessages);
+            /** crée un tableau avec les id des developpeurs present dans l'equipe du developpeur qu on veut modifier */
+            $excludeDevIds = [];
+            foreach ($devIds as $devIdToExclude) {
+                $excludeDevIds[] = $devIdToExclude;
+            }
+
+            /** Recupere tout les developpeurs sauf ceux present dans l'equipe du developpeur selectionner pour la modification */
+            $developers = Developpeur::find([
+                "conditions" => "id NOT IN ({devIds:array})",
+                "bind" => ["devIds" => $excludeDevIds]
+            ]);
+
+            /** Retourne un json avec l'id de et le nom de chaque developpeur qui peuvent intégré l'equipe  */
+            $developerInfo = [];
+            foreach ($developers as $dev) {
+                $developerInfo[] = [
+                    'id' => $dev->getId(),
+                    'name' => $dev->Collaborateur->getPrenomNom(),
+                    'competence' => $dev->enumNivCompetence()
+                ];
+            }
+
+            $response->setJsonContent([
+                "status" => "success",
+                "developers" => $developerInfo
+            ]);
+            return $response->send();
+        } else {
+           return $this->flashSession->error("La requête n'est pas de type GET");
         }
-
-        $devIds = CompositionEquipe::getDevsByTeamIds($teamIds);
-
-        /** crée un tableau avec les id des developpeurs present dans l'equipe du developpeur qu on veut modifier */
-        $excludeDevIds = [];
-        foreach ($devIds as $devIdToExclude) {
-            $excludeDevIds[] = $devIdToExclude;
-        }
-
-        /** Recupere tout les developpeurs sauf ceux present dans l'equipe du developpeur selectionner pour la modification */
-        $developers = Developpeur::find([
-            "conditions" => "id NOT IN ({devIds:array})",
-            "bind" => ["devIds" => $excludeDevIds]
-        ]);
-
-        /** Retourne un json avec l'id de et le nom de chaque developpeur qui peuvent intégré l'equipe  */
-        $developerInfo = [];
-        foreach ($developers as $dev) {
-            $developerInfo[] = [
-                'id' => $dev->getId(),
-                'name' => $dev->Collaborateur->getPrenomNom(),
-                'competence' => $dev->enumNivCompetence()
-            ];
-        }
-
-
-        $response->setJsonContent([
-            "status" => "success",
-            "developers" => $developerInfo
-        ]);
-        return $response->send();
     }
 
 
@@ -152,18 +154,6 @@ class EquipeController extends ControllerBase
 
             if (!$error) $team->delete();
         }
-        return $this->response->redirect("/phalcon/equipe");
-
-//        if($this->request->get("teamid")){
-//            foreach (CompositionEquipe::find('id_team =' .  $this->request->get("teamid")) as $teamCompositionLigne) {
-//                $teamCompositionLigne->delete();
-//            }
-//            if(count(CompositionEquipe::find('id_team =' .  $this->request->get("teamid"))) === 0){
-//               Team::find($this->request->get("teamid"))->delete();
-//            }
-//            return $this->response->redirect("/phalcon/equipe");
-//        } else {
-//            return "Il y a eu une erreur lors de la suppression";
-//        }
+        return $this->response->redirect($this->url->get(PROJECT_PATH . "/equipe"));
     }
 }
