@@ -5,3 +5,4 @@ vendor/*
 composer.lock
 !**/.gitkeep
 **/local.php
+.vscode/*

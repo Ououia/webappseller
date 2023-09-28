@@ -11,6 +11,7 @@ use Phalcon\Models\Developpeur;
 use Phalcon\Models\Team;
 use \Phalcon\Modules\Frontend\Controllers\ControllerBase;
 
+
 class EquipeController extends ControllerBase
 {
     /** tableau des equipes */
@@ -19,11 +20,11 @@ class EquipeController extends ControllerBase
         $equipes = Team::find();
 
         $table = '';
-        foreach ($equipes as $equipe){
+        foreach ($equipes as $equipe) {
 
             $dev = $equipe->getRelated('CompositionEquipe');
 
-            $table .= '<h2>'. $equipe->getName() . '<button data-team=' . '"'. $equipe->getId() .'"'.  ' title="Modifier le nom de cette equipe" type="button" class="btn" data-bs-toggle="modal" data-bs-target="#editNameModal"><i class="fa-solid fa-pen fa-xl"></i></button>' .'<button data-delete-team=' . '"'. $equipe->getId() .'"'.  ' title="Supprimer cette equipe" type="button" class="btn btn-for-delete" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="fa-solid fa-trash fa-xl" style="color: #ff0000;"></i></button>' . '</h2>';
+            $table .= '<h2>' . $equipe->getName() . '<button data-delete-team=' . '"' . $equipe->getId() . '"' . ' title="Supprimer cette equipe" type="button" class="btn btn-for-delete" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="fa-solid fa-trash fa-xl" style="color: #ff0000;"></i></button>' . '</h2>';
             $table .= '<table class="table">';
             $table .= '<thead>';
             $table .= '<tr>';
@@ -35,15 +36,15 @@ class EquipeController extends ControllerBase
             $table .= '<tbody>';
             $table .= '<tr>';
             $table .= '<td>Chef de projet <i class="fa-solid fa-crown" style="color: #d3d600;"></i></td>';
-            $table .= '<td>' . $equipe->Chefdeprojet->Collaborateur->getPrenomNom() .'</td>';
-            $table .= '<td>' . $equipe->Chefdeprojet->Collaborateur->getCompetenceLibele() .'</td>';
+            $table .= '<td>' . $equipe->Chefdeprojet->Collaborateur->getPrenomNom() . '</td>';
+            $table .= '<td>' . $equipe->Chefdeprojet->Collaborateur->getCompetenceLibele() . '</td>';
             $table .= '</tr>';
-            foreach ($dev as $d){
+            foreach ($dev as $d) {
                 $table .= '<tr>';
-                $table .= '<td> Developpeur ' . $d->Developpeur->enumNivCompetence() .'</td>';
-                $table .= '<td>' . $d->Developpeur->Collaborateur->getPrenomNom() .'</td>';
-                $table .= '<td>' . $d->Developpeur->Collaborateur->getCompetenceLibele() .'</td>';
-                $table .= '<td><button data-cdp =' . '"'. $equipe->Chefdeprojet->getId() .'"'.  'data-team =' . '"'. $equipe->getId() .'"'.  'data-dev=' . '"'. $d->Developpeur->getId() .'"'.  '  class="button-for-modify btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#modifyModal">Modifier</button></td>';
+                $table .= '<td> Developpeur ' . $d->Developpeur->enumNivCompetence() . '</td>';
+                $table .= '<td>' . $d->Developpeur->Collaborateur->getPrenomNom() . '</td>';
+                $table .= '<td>' . $d->Developpeur->Collaborateur->getCompetenceLibele() . '</td>';
+                $table .= '<td><button  data-compoid =' . '"' . $d->getId() . '"' . '  data-cdp =' . '"' . $equipe->Chefdeprojet->getId() . '"' . 'data-team =' . '"' . $equipe->getId() . '"' . '  class="button-for-modify btn btn-info text-white" data-bs-toggle="modal" data-bs-target="#modifyModal">Modifier</button></td>';
                 $table .= '</tr>';
             }
             $table .= '</tbody>';
@@ -53,57 +54,61 @@ class EquipeController extends ControllerBase
         $this->view->setVar('table', $table);
     }
 
-//    public function modifyTeamName(){
-//
-//    }
 
     public function modifyDevInTeamAction(): \Phalcon\Http\ResponseInterface
     {
-        if($this->request->isPost()){
+        if ($this->request->isPost()) {
             $referer = $this->request->getHTTPReferer();
 
-            $devId = $this->request->get('devId', "int");
+            $compoId = $this->request->get('compoId', "int");
             $newDevId = $this->request->get('newDevName', "int");
-            $teamId = $this->request->get('teamId', "int");
 
-            if($devId && $newDevId && $teamId){
-                $this->db->begin();  // Start a transaction
+            if ($compoId && $newDevId) {
+                try {
+                    $compositionEquipe = CompositionEquipe::findFirst($compoId);
 
-                if(CompositionEquipe::find(["conditions" => "id_dev = :devId: AND id_team = :teamId:", "bind" => ["devId" => $devId, "teamId" => $teamId]])->delete())
-                {
-                    $newDev =  (new CompositionEquipe())
-                        ->setIdTeam($teamId)
-                        ->setIdDev($newDevId);
+                    if ($compositionEquipe) {
+                        // Update the 'devid' field
+                        $compositionEquipe->setIdDev($newDevId);
 
-                    if ($newDev->save()) {
-                        $this->db->commit();  // Commit the transaction
-                        $this->flashSession->success("Équipe modifier avec succès");
+                        // Save the updated record
+                        if ($compositionEquipe->save()) {
+                            $this->flashSession->success("Developpeur modifié avec succes");
+                            return $this->response->redirect($referer);
+                        } else {
+                            $this->flashSession->error("Il y a eu une erreur lors de la modification");
+                            return $this->response->redirect($referer);
+                        }
+                    } else {
+                        $this->flashSession->error("Désolé nous avons pas trouvé ce developpeur");
                         return $this->response->redirect($referer);
                     }
+                } catch (\Exception $e) {
+                    $this->flashSession->error("Il y a eu une erreur lors de la modification de l'équipe.");
+                    return $this->response->redirect($referer);
                 }
-                $this->db->rollback();  // Rollback the transaction in case of failure
-                $this->flashSession->error("Il y a eu une erreur lors de la modification de l'équipe.");
-                return $this->response->redirect($referer);
             }
-            $this->flashSession->error("Invalid parameters");
+            $this->flashSession->error("Il y a eu une erreur, veuillez reesayer");
             return $this->response->redirect($referer);
         } else {
-            return  $this->flashSession->error("La requête n'est pas de type GET");
+            return $this->flashSession->error("La requête n'est pas de type POST");
         }
     }
 
     /** Permet de modifier un developpeur dans une equipe donnée */
     public function getAvailableDevsAction(): \Phalcon\Http\ResponseInterface
     {
-        if($this->request->isGet()){
-            $response = new Response();
+        $response = new Response();
 
+        if ($this->request->isGet()) {
             /** recupere les equipes avec les memes chef de projet et ensuite les developpeurs qui sont dans ces equipes */
-            $teamIds = Team::getTeamsByChefdeprojetId($this->request->get("cdpid", "int"));
+            $teamIds = Team::getTeamsByChefdeprojetId($this->request->get("cdpid", "int")) ?? [];
 
             if (isset($teamIds['error']) && $teamIds['error'] === true) {
-                $errorMessages = implode(", ", $teamIds['messages']);
-                $this->flashSession->error($errorMessages);
+                $response->setJsonContent([
+                    "status" => "Error",
+                ]);
+                return $response->send();
             }
 
             $devIds = CompositionEquipe::getDevsByTeamIds($teamIds);
@@ -136,7 +141,10 @@ class EquipeController extends ControllerBase
             ]);
             return $response->send();
         } else {
-           return $this->flashSession->error("La requête n'est pas de type GET");
+            $response->setJsonContent([
+                "status" => "Error",
+            ]);
+            return $response->send();
         }
     }
 
@@ -147,16 +155,16 @@ class EquipeController extends ControllerBase
         $team = Team::findFirst($this->request->get("teamid"));
 
         $error = false;
-        if(!empty($team))
-        {
+        if (!empty($team)) {
             foreach ($team->CompositionEquipe as $teamComposition) {
                 if (!$teamComposition->delete()) {
                     $error = true;
                 }
             }
 
-            if (!$error) $team->delete();
+            if (!$error)
+                $team->delete();
         }
-        return $this->response->redirect($this->url->get(PROJECT_PATH . "/equipe"));
+        return $this->response->redirect($this->url->get("/equipe"));
     }
 }
