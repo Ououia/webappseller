@@ -6,8 +6,6 @@ namespace Phalcon\modules\frontend\controllers;
 
 use mysql_xdevapi\Exception;
 use Phalcon\Models\Chefdeprojet;
-use Phalcon\Models\Composant;
-use Phalcon\Models\CompositionEquipe;
 use Phalcon\Models\Developpeur;
 use Phalcon\Models\Team;
 use \Phalcon\Modules\Frontend\Controllers\ControllerBase;
@@ -22,7 +20,7 @@ class DashboardController extends ControllerBase
 
         $htmlContent = "";
 
-        $htmlContent .= '<form action=' .  $this->url->get(PROJECT_PATH . "/dashboard/createTeam") .' method="post">';
+        $htmlContent .= '<form action=' . $this->url->get("/dashboard/createTeam") . ' method="post">';
         $htmlContent .= '<label class="mb-2 fs-3" for="teamname">Nom de l\'équipe :</label>';
         $htmlContent .= '<br>';
         $htmlContent .= '<input class="mb-2" type="text" id="teamname" name="teamname" required minlength="4" maxlength="24" size="10">';
@@ -83,7 +81,7 @@ class DashboardController extends ControllerBase
                     return $this->response->redirect($referer);
                 }
             } else {
-                $this->flashSession->error("Le développeur " . implode("," , $conflictDev) . " est déjà dans une équipe avec ce chef de projet.");
+                $this->flashSession->error("Le développeur " . implode(",", $conflictDev) . " est déjà dans une équipe avec ce chef de projet.");
                 return $this->response->redirect($referer);
             }
         } else {
