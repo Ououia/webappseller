@@ -5,7 +5,6 @@
  */
 defined('BASE_PATH') || define('BASE_PATH', getenv('BASE_PATH') ?: realpath(dirname(__FILE__) . '/../..'));
 defined('APP_PATH') || define('APP_PATH', BASE_PATH . '/app');
-defined('PROJECT_PATH') || define('PROJECT_PATH', 'phalcon');
 
 $localConfig =  [
     'database' => [
@@ -40,7 +39,7 @@ return new \Phalcon\Config([
         'modelsDir'      => APP_PATH . '/common/models/',
         'migrationsDir'  => APP_PATH . '/migrations/',
         'cacheDir'       => BASE_PATH . '/cache/',
-        'baseUri'        => '/',
+        'baseUri'        => $localConfig['baseUri'],
     ],
 
     /**

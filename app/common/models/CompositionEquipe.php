@@ -131,8 +131,13 @@ class CompositionEquipe extends \Phalcon\Mvc\Model
     }
 
 
-    public static function getDevsByTeamIds(array $teamIds): array
+    public static function getDevsByTeamIds($teamIds): array
     {
+        if (is_int($teamIds)) {
+            $teamIds = [$teamIds];
+        }
+
+
         $compositionEquipes = CompositionEquipe::find([
             'conditions' => 'id_team IN ({teamIds:array})',
             'bind' => ['teamIds' => $teamIds]

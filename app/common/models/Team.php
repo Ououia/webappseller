@@ -140,11 +140,11 @@ class Team extends Model
         return parent::findFirst($parameters);
     }
 
-    public function checkAddTeam(int $cdp, array $devs) : array
+    public function checkAddTeam(int $cdp, array $devs): array
     {
         $teams = Team::find([
             'conditions' => 'chefdeprojet_id = :cdp:',
-            'bind'       => ['cdp' => $cdp]
+            'bind' => ['cdp' => $cdp]
         ]);
 
         $devNames = [];
@@ -187,27 +187,30 @@ class Team extends Model
     {
         $validator = new Validation();
         $validator->add('cdp', new PresenceOf(['message' => 'ID du chef de project obligatoire']));
-        $validator->add('cdp', new Digit(['message' => 'ID du checf de projet doit etre en entier']));
+        $validator->add('cdp', new Digit(['message' => 'ID du chef de projet doit etre en entier']));
 
         $messages = $validator->validate(['cdp' => $cdp]);
         $errorMessages = [];
 
-        // Step 1: Collect Messages
         if (count($messages)) {
             foreach ($messages as $message) {
                 $errorMessages[] = $message->getMessage();
             }
         }
 
-        // Step 2: Return or Display Messages
+        $teams = Team::find([
+            'conditions' => 'chefdeprojet_id = :cdp:',
+            'bind' => ['cdp' => $cdp]
+        ]);
+
+
+        if (($teams->count() === 0)) {
+            $errorMessages[] = "no team found";
+        }
+
         if (!empty($errorMessages)) {
             return ['error' => true, 'messages' => $errorMessages];
         }
-
-        $teams = Team::find([
-            'conditions' => 'chefdeprojet_id = :cdp:',
-            'bind'       => ['cdp' => $cdp]
-        ]);
 
         $teamIds = [];
         foreach ($teams as $team) {

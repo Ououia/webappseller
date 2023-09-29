@@ -15,12 +15,11 @@ class ComposantController extends Controller
 
         $comp = [];
 
-        foreach ($composants as $composant)
-        {
-            $libelle = '<td>'. $composant->getLibelle() . '</td>';
-            $competence = '<td>'. $composant->getCompetence() . '</td>';
-            $charge = '<td>'. $composant->getCharge() . '</td>';
-            $modulelibelle = '<td>'. $composant->getRelated("Module")->getLibelle() . '</td>';
+        foreach ($composants as $composant) {
+            $libelle = '<td>' . $composant->getLibelle() . '</td>';
+            $competence = '<td>' . $composant->getCompetence() . '</td>';
+            $charge = '<td>' . $composant->getCharge() . '</td>';
+            $modulelibelle = '<td>' . $composant->getRelated("Module")->getLibelle() . '</td>';
 
             $comp[] = ['libelle' => $libelle, 'competence' => $competence, 'charge' => $charge, 'modulelibelle' => $modulelibelle];
         }

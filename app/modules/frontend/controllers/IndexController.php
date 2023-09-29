@@ -144,7 +144,7 @@ class IndexController extends ControllerBase
 
     }
 
-    return $this->response->redirect($this->url->get(PROJECT_PATH . "/dashboard"));
+    return $this->response->redirect($this->url->get("/dashboard"));
 }
 
 }
