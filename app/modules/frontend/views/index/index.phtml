@@ -1,4 +1,6 @@
-<style>@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700;800;900&display=swap');
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600;700;800;900&display=swap');
+
     .button {
         position: relative;
         padding: 16px 30px;
@@ -37,8 +39,8 @@
         transform: scale(1);
         transition-delay: 0.5s;
         box-shadow: 0 0 10px var(--color),
-        0 0 30px var(--color),
-        0 0 60px var(--color);
+            0 0 30px var(--color),
+            0 0 60px var(--color);
     }
 
     .button span {
@@ -47,10 +49,10 @@
         pointer-events: none;
         border-radius: 2px;
         box-shadow: 0 0 10px var(--color),
-        0 0 20px var(--color),
-        0 0 30px var(--color),
-        0 0 50px var(--color),
-        0 0 100px var(--color);
+            0 0 20px var(--color),
+            0 0 30px var(--color),
+            0 0 50px var(--color),
+            0 0 100px var(--color);
         transition: 0.5s ease-in-out;
         transition-delay: 0.25s;
     }
@@ -118,16 +120,17 @@
         transform-origin: bottom;
     }
 
-    .button:hover span:nth-child(4 ) {
+    .button:hover span:nth-child(4) {
         bottom: 50%;
     }
+
     // UPDATE: less lines of code
 
-       *,
-       *::before,
-       *::after {
-           box-sizing: border-box;
-       }
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
 
     :root {
         --color-primary: #1e9bff;
@@ -147,7 +150,7 @@
 
     .text-shadows {
         text-shadow: 3px 3px 0 var(--color-secondary), 6px 6px 0 var(--color-tertiary),
-        9px 9px var(--color-quaternary), 12px 12px 0 var(--color-quinary);
+            9px 9px var(--color-quaternary), 12px 12px 0 var(--color-quinary);
         font-family: bungee, sans-serif;
         font-weight: 400;
         /*text-transform: uppercase;*/
@@ -163,48 +166,58 @@
         0% {
             text-shadow: none;
         }
+
         10% {
             transform: translate(-3px, -3px);
             text-shadow: 3px 3px 0 var(--color-secondary);
         }
+
         20% {
             transform: translate(-6px, -6px);
             text-shadow: 3px 3px 0 var(--color-secondary),
-            6px 6px 0 var(--color-tertiary);
+                6px 6px 0 var(--color-tertiary);
         }
+
         30% {
             transform: translate(-9px, -9px);
             text-shadow: 3px 3px 0 var(--color-secondary),
-            6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary);
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary);
         }
+
         40% {
             transform: translate(-12px, -12px);
             text-shadow: 3px 3px 0 var(--color-secondary),
-            6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
-            12px 12px 0 var(--color-quinary);
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
+                12px 12px 0 var(--color-quinary);
         }
+
         50% {
             transform: translate(-12px, -12px);
             text-shadow: 3px 3px 0 var(--color-secondary),
-            6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
-            12px 12px 0 var(--color-quinary);
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
+                12px 12px 0 var(--color-quinary);
         }
+
         60% {
             text-shadow: 3px 3px 0 var(--color-secondary),
-            6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
-            12px 12px 0 var(--color-quinary);
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary),
+                12px 12px 0 var(--color-quinary);
         }
+
         70% {
             text-shadow: 3px 3px 0 var(--color-secondary),
-            6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary);
+                6px 6px 0 var(--color-tertiary), 9px 9px var(--color-quaternary);
         }
+
         80% {
             text-shadow: 3px 3px 0 var(--color-secondary),
-            6px 6px 0 var(--color-tertiary);
+                6px 6px 0 var(--color-tertiary);
         }
+
         90% {
             text-shadow: 3px 3px 0 var(--color-secondary);
         }
+
         100% {
             text-shadow: none;
         }

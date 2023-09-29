@@ -31,10 +31,16 @@ class IndexController extends ControllerBase
         }
     }
 
+    public function indexAction()
+    {
+        $hideHeader = true;
+
+        $this->view->hideHeader = $hideHeader;
+    }
+
     public function startGameAction(): \Phalcon\Http\ResponseInterface
     {
 
-        $this->db->begin();
 
         try {
             CompositionEquipe::find()->delete();
@@ -43,9 +49,7 @@ class IndexController extends ControllerBase
             Chefdeprojet::find()->delete();
             Collaborateur::find()->delete();
 
-            $this->db->commit();
         } catch (\Exception $e) {
-            $this->db->rollback();
             echo "Une erreur est survenu, veuillez reessayer";
         }
 
@@ -87,18 +91,16 @@ class IndexController extends ControllerBase
 
         $prime = 0;
 
-        for($i = 1; $i < count($names) ; $i++)
-        {
-            switch ($randomizer = $this->randomizer())
-            {
+        for ($i = 1; $i < count($names); $i++) {
+            switch ($randomizer = $this->randomizer()) {
                 case 1:
-                    $prime = rand(900,1200);
+                    $prime = rand(900, 1200);
                     break;
                 case 2:
-                    $prime = rand(1900,2100);
+                    $prime = rand(1900, 2100);
                     break;
                 case 3:
-                    $prime = rand(2900,3100);
+                    $prime = rand(2900, 3100);
                     break;
             }
 
@@ -121,31 +123,28 @@ class IndexController extends ControllerBase
 
         /** Attribut un metier a chaque collaborateur , 70% des collaborateurs sont de dev le reste des chefs de projet */
 
-        $totalDev = intval(Collaborateur::count() * 0.7);  // 60% of people
+        $totalDev = intval(Collaborateur::count() * 0.7); // 60% of people
         $count = 0;
-        foreach (Collaborateur::find(['order' => 'RAND()']) as $collab)
-        {
-            if ($count <= $totalDev)
-            {
+        foreach (Collaborateur::find(['order' => 'RAND()']) as $collab) {
+            if ($count <= $totalDev) {
                 // make this collab a dev
                 (new Developpeur())
-                ->setCollaborateurId($collab->getId())
-                ->setCompetence(rand(1,3))
-                ->setIndiceProduction(rand(1,3))
-                ->save();
+                    ->setCollaborateurId($collab->getId())
+                    ->setCompetence(rand(1, 3))
+                    ->setIndiceProduction(rand(1, 3))
+                    ->save();
             } else {
                 // make this collab a manager
                 (new Chefdeprojet())
                     ->setCollaborateurId($collab->getId())
-                    ->setBoostProduction(rand(10,30))
+                    ->setBoostProduction(rand(10, 30))
                     ->save();
             }
             $count++;
 
+        }
+
+        return $this->response->redirect($this->url->get("/dashboard"));
     }
 
-    return $this->response->redirect($this->url->get("/dashboard"));
 }
-
-}
-
