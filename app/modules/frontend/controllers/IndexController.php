@@ -20,13 +20,13 @@ class IndexController extends ControllerBase
     {
         $rand = mt_rand(1, 10);
         if ($rand <= 6) {
-            // 60% chance to draw
+            // 60% chance
             return 1;
         } elseif ($rand <= 9) {
-            // 30% chance to draw
+            // 30% chance
             return 2;
         } else {
-            // 10% chance to draw
+            // 10% chance
             return 3;
         }
     }
@@ -109,9 +109,9 @@ class IndexController extends ControllerBase
                 ->setNiveauCompetence($randomizer)
                 ->setPrimeEmbauche($prime);
 
-            // Check if the insertion was successful
+
             if (!$user->save()) {
-                echo "Sorry, the following problems were generated: ";
+                echo "Nous avons recontrer des erreurs : ";
                 $messages = $user->getMessages();
 
                 foreach ($messages as $message) {

@@ -14,7 +14,9 @@ use \Phalcon\Modules\Frontend\Controllers\ControllerBase;
 
 class ProjetController extends ControllerBase
 {
-    /** Formulaire de création d'equipe */
-    public function indexAction(){}
+    /** Formulaire de création de projet */
+    public function indexAction()
+    {
+    }
 
 }

@@ -103,14 +103,14 @@ class EquipeController extends ControllerBase
                         ->setIdDev($newDev);
 
                     if ($dev->save()) {
-                        $this->flashSession->success("Developpeur rajouter a l'equipe.");
+                        $this->flashSession->success("Developpeur ajouter à l'equipe.");
                         return $this->response->redirect($referer);
                     } else {
-                        $this->flashSession->error("Error while adding dev to the team.");
+                        $this->flashSession->error("Il y a eu une erreur lors de l'ajout du developpeur");
                         return $this->response->redirect($referer);
                     }
                 } else {
-                    $this->flashSession->error("This dev is already part of the team.");
+                    $this->flashSession->error("Ce developpeur fait deja partis d'une équipe");
                     return $this->response->redirect($referer);
                 }
             } else {
