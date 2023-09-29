@@ -3,10 +3,10 @@
 $localConfig = [
         "database" => [
                 'adapter' => 'Mysql',
-                'host' => '192.168.50.20',
+                'host' => 'localhost',
                 'username' => 'root',
-                'password' => 'test',
-                'dbname' => 'webappseller',
+                'password' => '',
+                'dbname' => '',
                 'charset' => 'utf8',
         ],
         "baseUri" => ""
