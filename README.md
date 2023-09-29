@@ -12,10 +12,20 @@ Rendez-vous dans le dossier config:
 
 Renommez le fichier local-exemple.php en local.php
 
-### Étape 3: Configuration de la base de données
+### Etape 3 : Crée votre base de donnée 
+
+Dans le dossier public il y a un dossier export_db , dans ce dossier il y a le script de création de la base de donnée 
+
+### Étape 4: Configuration de la base de données
 
 Le fichier local-exemple.php sert de template, veuillez entrer les informations de connexion à votre base de données
 
-### Étape 4: Lancement du projet
+### Étape 5: Lancement du projet
 
 Démarrer votre serveur apache
+
+### Etape 5 : Jouer au jeu 
+
+Le lancement du jeu devrait initialiser toutes les données necessaire pour jouer
+
+
