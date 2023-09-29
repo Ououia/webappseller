@@ -65,6 +65,11 @@ class DashboardController extends ControllerBase
                 return $this->response->redirect($referer);
             }
 
+            if (count($this->request->getPost("dev")) > 3) {
+                $this->flashSession->error("Le nombre maximum de membre pour une equipe est de 3");
+                return $this->response->redirect($referer);
+            }
+
             $teamModel = new Team();
             $conflictDev = $teamModel->checkAddTeam(
                 (int) $this->request->getPost("chefdeprojet"),
