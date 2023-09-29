@@ -59,11 +59,18 @@ class DashboardController extends ControllerBase
         $referer = $this->request->getHTTPReferer();
 
         if ($this->request->isPost()) {
+
+            if (count($this->request->getPost("dev")) === 0 || $this->request->getPost("chefdeprojet") === 0) {
+                $this->flashSession->error("Vous devez selectionnez au moins un developpeur ou chef de projet dans une equipe");
+                return $this->response->redirect($referer);
+            }
+
             $teamModel = new Team();
             $conflictDev = $teamModel->checkAddTeam(
                 (int) $this->request->getPost("chefdeprojet"),
                 $this->request->getPost("dev")
             );
+
 
             // Si aucun développeur en conflit n'est trouvé, procéder à l'ajout de l'équipe
             if (count($conflictDev) === 0) {
