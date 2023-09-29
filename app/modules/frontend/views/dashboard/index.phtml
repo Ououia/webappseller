@@ -24,11 +24,9 @@
 
 
 <script>
-
     //Disable les checkbox apres avoir selectionner 3 developpeurs
-
     function limitCheckboxes(maxChecked) {
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const checkboxes = document.querySelectorAll('.checkbox');
         let checkedCount = 0;
 
         checkboxes.forEach(checkbox => {

@@ -67,8 +67,8 @@ class EquipeController extends ControllerBase
         if ($this->request->isPost()) {
             $referer = $this->request->getHTTPReferer();
 
-            $newDev = $this->request->get('newDevName', "int");
-            $teamId = $this->request->get('compoId', "int");
+            $newDev = $this->request->getPost('newDevName', "int");
+            $teamId = $this->request->getPost('compoId', "int");
 
             if ($newDev && $teamId) {
 

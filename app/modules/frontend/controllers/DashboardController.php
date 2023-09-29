@@ -37,7 +37,7 @@ class DashboardController extends ControllerBase
         $htmlContent .= '<br>';
         foreach ($devs as $dev) {
             $htmlContent .= '<label>';
-            $htmlContent .= '<input type="checkbox" name="dev[]" value=' . '"' . $dev->getId() . '"' . 'onclick="limitCheckboxes(3)">';
+            $htmlContent .= '<input class="checkbox" type="checkbox" name="dev[]" value=' . '"' . $dev->getId() . '"' . 'onclick="limitCheckboxes(3)">';
             $htmlContent .= ' ';
             $htmlContent .= $dev->Collaborateur->getPrenomNom() . " (" . $dev->enumNivCompetence() . ")";
             $htmlContent .= '</label>';
@@ -86,14 +86,18 @@ class DashboardController extends ControllerBase
                 );
 
                 if ($newTeam) {
-                    $this->flashSession->success("Équipe créée avec succès");
+                    $this->flashSession->success("Équipe créée avec succès (<a href=" . $this->url->get('/equipe') . ">Voir equipe</a>)");
                     return $this->response->redirect($referer);
                 } else {
                     $this->flashSession->error("Il y a eu une erreur lors de la création de l'équipe.");
                     return $this->response->redirect($referer);
                 }
             } else {
-                $this->flashSession->error("Le développeur " . implode(",", $conflictDev) . " est déjà dans une équipe avec ce chef de projet.");
+                $liaison = ["Le", "est"];
+                if (count($conflictDev) > 1) {
+                    $liaison = ["Les", "sont"];
+                }
+                $this->flashSession->error($liaison[0] . " " . "développeur " . implode(", ", $conflictDev) . " " . $liaison[1] . " " . "déjà dans une équipe avec ce chef de projet.");
                 return $this->response->redirect($referer);
             }
         } else {
