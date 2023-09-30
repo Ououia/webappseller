@@ -344,4 +344,23 @@ class Projet extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
+
+    public function enumStatutProjet(): string
+    {
+        switch ($this->getStatut()) {
+            case "0":
+                return "non-commencé";
+
+            case '1':
+                return "En cours";
+
+            case "2":
+                return "Terminé";
+
+            default:
+                return 'type unknown';
+        }
+    }
+
+
 }
