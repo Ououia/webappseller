@@ -93,10 +93,7 @@ class DashboardController extends ControllerBase
                     return $this->response->redirect($referer);
                 }
             } else {
-                $liaison = ["Le", "est"];
-                if (count($conflictDev) > 1) {
-                    $liaison = ["Les", "sont"];
-                }
+                $liaison = count($conflictDev) > 1 ? ["Les", "sont"] : ["Le", "est"];
                 $this->flashSession->error($liaison[0] . " " . "développeur " . implode(", ", $conflictDev) . " " . $liaison[1] . " " . "déjà dans une équipe avec ce chef de projet.");
                 return $this->response->redirect($referer);
             }
